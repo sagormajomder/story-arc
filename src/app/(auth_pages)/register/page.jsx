@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function RegisterPage() {
   return (
-    <div className='w-full flex h-screen overflow-hidden'>
+    <main className='w-full flex h-screen overflow-hidden'>
       <AuthLeftSection
         title='Join the community of readers.'
         subtitle='Track your progress, discover new favorites, and share your journey with thousands of book enthusiasts around the world.'>
@@ -30,6 +30,6 @@ export default function RegisterPage() {
         </div>
       </AuthLeftSection>
       <RegisterForm />
-    </div>
+    </main>
   );
 }

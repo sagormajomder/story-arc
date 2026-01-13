@@ -22,12 +22,14 @@ import AuthProvider from '@/components/auth/AuthProvider';
 
 export default function RootLayout({ children }) {
   return (
-    <html lang='en'>
-      <body
-        className={`${playfair.variable} ${inter.variable} antialiased bg-background text-foreground font-sans`}>
-        <AuthProvider>{children}</AuthProvider>
-        <Toaster position='top-center' reverseOrder={false} />
-      </body>
-    </html>
+    <>
+      <html lang='en'>
+        <body
+          className={`${playfair.variable} ${inter.variable} antialiased bg-background text-foreground font-sans`}>
+          <AuthProvider>{children}</AuthProvider>
+        </body>
+      </html>
+      <Toaster position='top-center' reverseOrder={false} />
+    </>
   );
 }
