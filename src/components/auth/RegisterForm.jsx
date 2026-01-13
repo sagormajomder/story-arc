@@ -6,25 +6,26 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Camera, Eye, EyeOff, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const {
     register,
     handleSubmit,
-    watch,
+    setValue,
     formState: { errors },
   } = useForm();
 
-  const password = watch('password', '');
-
-  // Simple password strength calculator
+  // Strict password strength calculator
   const calculateStrength = pass => {
     let strength = 0;
     if (pass.length >= 8) strength += 1;
@@ -34,12 +35,80 @@ export default function RegisterForm() {
     setPasswordStrength(strength);
   };
 
+  const handleImageChange = e => {
+    const file = e.target.files[0];
+    if (file) {
+      setValue('profileImage', file); // Register file in form data
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const onSubmit = async data => {
     setIsLoading(true);
-    // Simulate registration
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    console.log(data);
-    setIsLoading(false);
+
+    try {
+      // Upload Image into Imgbb host
+      const { profileImage } = data;
+      let imageUrl = 'https://i.ibb.co.com/fzYGmQj8/avatar-placeholder.gif';
+
+      if (profileImage) {
+        const formData = new FormData();
+        formData.append('image', profileImage);
+
+        const res = await fetch(
+          `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_HOST_KEY}`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+
+        const imageData = await res.json();
+
+        if (imageData.success) {
+          imageUrl = imageData.data.url;
+        } else {
+          console.error('Image upload failed:', imageData);
+          toast.error('Image upload failed');
+        }
+      }
+
+      const userInfo = {
+        ...data,
+        profileImage: imageUrl,
+      };
+
+      // console.log(userInfo);
+
+      // Register User into DB
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userInfo),
+      });
+
+      const result = await res.json();
+      // console.log(result);
+
+      if (!res.ok) {
+        throw new Error(result.message || 'Registration failed');
+      }
+
+      if (result.insertedId) {
+        toast.success('User registration successful!');
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      toast.error(error.message || 'Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,19 +125,38 @@ export default function RegisterForm() {
 
         <div className='space-y-4'>
           <Label>Profile Picture</Label>
-          <div className='flex items-center gap-4 border-2 border-dashed border-input p-4 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer group'>
-            <div className='w-12 h-12 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors'>
-              <Camera className='w-6 h-6 text-muted-foreground group-hover:text-primary' />
+          <label
+            htmlFor='profile-upload'
+            className='flex items-center gap-4 border-2 border-dashed border-input p-4 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer group'>
+            <div className='w-12 h-12 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors overflow-hidden relative'>
+              {previewImage ? (
+                <Image
+                  src={previewImage}
+                  alt='Profile Preview'
+                  fill
+                  sizes=''
+                  className='w-full h-full object-cover'
+                />
+              ) : (
+                <Camera className='w-6 h-6 text-muted-foreground group-hover:text-primary' />
+              )}
             </div>
             <div className='space-y-1'>
               <p className='text-sm font-medium text-primary group-hover:underline'>
-                Upload photo
+                {previewImage ? 'Change photo' : 'Upload photo'}
               </p>
               <p className='text-xs text-muted-foreground'>
                 JPG, GIF or PNG. Max size of 2MB.
               </p>
             </div>
-          </div>
+            <input
+              id='profile-upload'
+              type='file'
+              accept='image/*'
+              className='hidden'
+              onChange={handleImageChange}
+            />
+          </label>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
@@ -119,6 +207,11 @@ export default function RegisterForm() {
                     value: 8,
                     message: 'Must be at least 8 characters',
                   },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
+                    message:
+                      'Must have 1 uppercase, 1 lowercase, 1 number, and 1 symbol',
+                  },
                   onChange: e => calculateStrength(e.target.value),
                 })}
               />
@@ -152,8 +245,10 @@ export default function RegisterForm() {
               ))}
             </div>
             <div className='flex justify-between text-xs text-muted-foreground mt-1'>
-              <span>At least 8 characters</span>
-              <span>One number or symbol</span>
+              <span>
+                At least 8 characters, One Uppercase, One lowercase, One number
+                and symbol
+              </span>
             </div>
 
             {errors.password && (
