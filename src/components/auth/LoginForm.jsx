@@ -1,5 +1,9 @@
 'use client';
 
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+
 import GoogleLogin from '@/components/auth/GoogleLogin';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,12 +24,31 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm();
 
+  const router = useRouter();
+
   const onSubmit = async data => {
     setIsLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log(data);
-    setIsLoading(false);
+    try {
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error('Invalid email or password');
+      } else {
+        toast.success('Logged in successfully!');
+        router.push('/');
+        router.refresh();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
