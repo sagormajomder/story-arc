@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Camera, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -103,8 +104,23 @@ export default function RegisterForm() {
       }
 
       if (result.insertedId) {
-        toast.success('User registration successful!');
-        router.push('/login');
+        toast.success('Registration successful! Logging you in...');
+
+        // Auto Login
+        const loginResult = await signIn('credentials', {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        });
+
+        if (loginResult?.error) {
+          toast.error('Auto-login failed. Please login manually.');
+          router.push('/login');
+        } else {
+          // Default redirect for new users
+          router.push('/user/dashboard');
+          router.refresh();
+        }
       }
     } catch (error) {
       console.error('Error during registration:', error);
