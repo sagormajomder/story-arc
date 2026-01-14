@@ -5,7 +5,9 @@ import { format } from 'date-fns';
 import { Edit2, RefreshCw, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import DeleteTutorialModal from './DeleteTutorialModal';
 
 export default function TutorialList({
   tutorials,
@@ -15,18 +17,34 @@ export default function TutorialList({
   onEdit,
 }) {
   const router = useRouter();
+  const [deleteModal, setDeleteModal] = useState({
+    open: false,
+    tutorial: null,
+  });
 
-  const handleDelete = async id => {
-    if (!confirm('Are you sure you want to delete this tutorial?')) return;
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutorials/${id}`, {
+  const confirmDelete = async () => {
+    const { tutorial } = deleteModal;
+    if (!tutorial) return;
+
+    // Optimistically close modal
+    setDeleteModal({ open: false, tutorial: null });
+
+    const deletePromise = fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tutorials/${tutorial._id}`,
+      {
         method: 'DELETE',
-      });
-      toast.success('Tutorial deleted');
+      }
+    ).then(async res => {
+      if (!res.ok) throw new Error('Failed to delete');
       router.refresh();
-    } catch (error) {
-      toast.error('Failed to delete');
-    }
+      return res;
+    });
+
+    toast.promise(deletePromise, {
+      loading: 'Deleting...',
+      success: 'Tutorial deleted',
+      error: 'Failed to delete',
+    });
   };
 
   const handlePageChange = newPage => {
@@ -38,6 +56,13 @@ export default function TutorialList({
 
   return (
     <div className='bg-card border border-border rounded-xl flex flex-col h-full'>
+      <DeleteTutorialModal
+        isOpen={deleteModal.open}
+        onClose={() => setDeleteModal({ open: false, tutorial: null })}
+        onConfirm={confirmDelete}
+        title={deleteModal.tutorial?.title}
+      />
+
       <div className='p-4 border-b border-border flex items-center justify-between'>
         <h3 className='font-bold text-lg'>Live Tutorials</h3>
         <div className='flex gap-2'>
@@ -78,6 +103,7 @@ export default function TutorialList({
                           src={tutorial.thumbnail}
                           alt={tutorial.title}
                           fill
+                          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                           className='object-cover opacity-90'
                         />
                       </div>
@@ -116,7 +142,7 @@ export default function TutorialList({
                       <Button
                         variant='ghost'
                         size='icon'
-                        onClick={() => handleDelete(tutorial._id)}
+                        onClick={() => setDeleteModal({ open: true, tutorial })}
                         className='h-8 w-8 hover:bg-red-500/10 hover:text-red-500 rounded-lg'>
                         <Trash2 size={16} />
                       </Button>
