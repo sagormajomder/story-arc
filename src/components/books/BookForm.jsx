@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Upload } from 'lucide-react';
+import { CldUploadWidget } from 'next-cloudinary';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -36,17 +37,6 @@ export default function BookForm({ initialData, onSubmit, isSubmitting }) {
 
   const [preview, setPreview] = useState(initialData?.cover || '');
 
-  const handleImageUpload = e => {
-    const file = e.target.files[0];
-    if (file) {
-      // In a real app, you would upload to a cloud service (e.g., Cloudinary) here.
-      // For now, we'll create a local preview URL.
-      const url = URL.createObjectURL(file);
-      setPreview(url);
-      setValue('cover', url); // In real app, set the returned URL string
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
       {/* Cover Image Upload */}
@@ -54,34 +44,43 @@ export default function BookForm({ initialData, onSubmit, isSubmitting }) {
         <label className='text-sm font-medium text-muted-foreground'>
           Cover Image
         </label>
-        <div className='relative w-full h-64 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center bg-muted/20 hover:bg-muted/30 transition-colors group cursor-pointer overflow-hidden'>
-          <input
-            type='file'
-            accept='image/*'
-            className='absolute inset-0 opacity-0 cursor-pointer z-10'
-            onChange={handleImageUpload}
-          />
-          {preview ? (
-            <Image
-              src={preview}
-              alt='Cover preview'
-              fill
-              className='object-contain p-2'
-            />
-          ) : (
-            <div className='flex flex-col items-center gap-2 text-muted-foreground group-hover:text-foreground transition-colors'>
-              <div className='p-3 rounded-full bg-secondary text-secondary-foreground'>
-                <Upload size={24} />
-              </div>
-              <div className='text-center'>
-                <p className='font-medium'>Click to upload cover</p>
-                <p className='text-xs text-muted-foreground'>
-                  PNG, JPG up to 10MB (Recommended: 600x900px)
-                </p>
-              </div>
+        <CldUploadWidget
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+          onSuccess={result => {
+            const url = result?.info?.secure_url;
+            if (url) {
+              setPreview(url);
+              setValue('cover', url);
+            }
+          }}>
+          {({ open }) => (
+            <div
+              onClick={() => open()}
+              className='relative w-full h-64 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center bg-muted/20 hover:bg-muted/30 transition-colors group cursor-pointer overflow-hidden'>
+              {preview ? (
+                <Image
+                  src={preview}
+                  alt='Cover preview'
+                  fill
+                  sizes='(min-width: 1280px) 600px, (min-width: 768px) 400px, 200px'
+                  className='object-contain p-2'
+                />
+              ) : (
+                <div className='flex flex-col items-center gap-2 text-muted-foreground group-hover:text-foreground transition-colors'>
+                  <div className='p-3 rounded-full bg-secondary text-secondary-foreground'>
+                    <Upload size={24} />
+                  </div>
+                  <div className='text-center'>
+                    <p className='font-medium'>Click to upload cover</p>
+                    <p className='text-xs text-muted-foreground'>
+                      PNG, JPG up to 10MB (Recommended: 600x900px)
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
-        </div>
+        </CldUploadWidget>
       </div>
 
       <div className='grid md:grid-cols-2 gap-6'>

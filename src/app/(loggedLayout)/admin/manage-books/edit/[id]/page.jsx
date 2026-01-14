@@ -22,20 +22,8 @@ export default async function EditBookPage({ params }) {
     notFound();
   }
 
-  // Server Action or Client Handler Wrapper?
-  // Since BookForm is client-side hook-form, we'll keep the submit logic client-side for now via the form wrapper,
-  // OR we can make a small client wrapper for the edit logic.
-  // The prompt asked for "priority to using server components", but forms are inherently interactive.
-  // The page itself fetches data on server.
-  // We can't pass server actions easily without enabling them, so we'll simulate the client-side submit being passed or handled by a wrapper.
-  // Actually, BookForm takes `onSubmit` prop.
-  // We need a client component wrapper to handle the submission logic (router.push etc) OR adapt BookForm.
-  // Let's create a specific Client Component for the Edit Form logic if needed,
-  // BUT the existing BookForm is reusable.
-  // Let's create `EditBookFormWrapper.jsx` to handle the logic that was previously in the page.
-
   return (
-    <div className='p-8 max-w-7xl mx-auto'>
+    <div className='p-8 max-w-2xl mx-auto'>
       {/* Header with Breadcrumb */}
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8'>
         <div className='space-y-4'>
@@ -60,7 +48,9 @@ export default async function EditBookPage({ params }) {
         </div>
       </div>
 
-      <EditBookClientWrapper book={book} />
+      <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
+        <EditBookClientWrapper book={book} />
+      </div>
     </div>
   );
 }

@@ -1,18 +1,26 @@
 'use client';
 
-import { Edit, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { Button } from '../ui/button';
 import DeleteBookModal from './DeleteBookModal';
 
-export default function BookTable({ books }) {
+export default function BookTable({ books, currentPage, totalPages }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const handlePageChange = newPage => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', newPage);
+    router.push(`?${params.toString()}`);
+  };
 
   const handleDeleteClick = book => {
     setSelectedBook(book);
@@ -83,6 +91,7 @@ export default function BookTable({ books }) {
                           }
                           alt={book.title}
                           fill
+                          sizes='(min-width: 1280px) 600px, (min-width: 768px) 400px, 200px'
                           className='object-cover'
                         />
                       </div>
@@ -123,9 +132,26 @@ export default function BookTable({ books }) {
         {books.length > 0 && (
           <div className='flex items-center justify-between px-6 py-4 border-t border-border bg-muted/20'>
             <span className='text-sm text-muted-foreground'>
-              Showing 1 to {books.length} of {books.length} entries
+              Page {currentPage} of {totalPages}
             </span>
-            {/* Pagination placeholder */}
+            <div className='flex items-center gap-2'>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage <= 1}
+                className='h-8 w-8 p-0'>
+                <ChevronLeft className='h-4 w-4' />
+              </Button>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+                className='h-8 w-8 p-0'>
+                <ChevronRight className='h-4 w-4' />
+              </Button>
+            </div>
           </div>
         )}
       </div>

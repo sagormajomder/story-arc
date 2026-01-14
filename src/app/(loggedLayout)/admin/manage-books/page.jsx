@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
-async function getBooks(genre) {
+async function getBooks(genre, page = 1) {
   const params = new URLSearchParams();
   if (genre) params.append('genre', genre);
+  params.append('page', page);
+  params.append('limit', 5);
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/books?${params.toString()}`,
@@ -36,12 +38,14 @@ async function getGenres() {
 }
 
 export default async function ManageBooksPage({ searchParams }) {
-  const { genre } = await searchParams;
-  const [books, availableGenres] = await Promise.all([
-    getBooks(genre),
+  const { genre, page } = await searchParams;
+  const currentPage = page ? parseInt(page) : 1;
+  const [booksData, availableGenres] = await Promise.all([
+    getBooks(genre, currentPage),
     getGenres(),
   ]);
 
+  const { books, totalPages } = booksData;
   const genres = ['All Genres', ...availableGenres];
 
   return (
@@ -67,7 +71,11 @@ export default async function ManageBooksPage({ searchParams }) {
       <GenreFilter genres={genres} />
 
       {/* Table */}
-      <BookTable books={books} />
+      <BookTable
+        books={books}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
     </div>
   );
 }
