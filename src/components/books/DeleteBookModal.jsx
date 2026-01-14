@@ -33,10 +33,11 @@ export default function DeleteBookModal({
             Are you sure you want to delete{' '}
             <span className='font-bold text-foreground'>"{bookTitle}"</span>?
             <br />
-            <div className='mt-2 text-red-500 bg-red-500/10 p-2 rounded text-sm border border-red-500/20'>
+            <br />
+            <span className='mt-2 block text-red-500 bg-red-500/10 p-2 rounded text-sm border border-red-500/20'>
               This action cannot be undone and will remove all associated user
               progress and reviews.
-            </div>
+            </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className='sm:justify-center gap-2 mt-4'>
