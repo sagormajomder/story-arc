@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function AddBookClientWrapper() {
+export default function AddBookClientWrapper({ genres = [] }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,5 +35,11 @@ export default function AddBookClientWrapper() {
     }
   };
 
-  return <BookForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />;
+  return (
+    <BookForm
+      onSubmit={handleSubmit}
+      isSubmitting={isSubmitting}
+      availableGenres={genres}
+    />
+  );
 }

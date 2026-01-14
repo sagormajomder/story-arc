@@ -16,6 +16,7 @@ export default function GenreFilter({ genres }) {
     } else {
       params.set('genre', genre);
     }
+    params.set('page', '1'); // Reset to page 1 on filter change
     router.replace(`?${params.toString()}`);
   };
 

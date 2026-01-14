@@ -14,9 +14,21 @@ async function getBook(id) {
   return res.json();
 }
 
+async function getGenres() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/genres?limit=100`,
+    {
+      cache: 'no-store',
+    }
+  );
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.genres || [];
+}
+
 export default async function EditBookPage({ params }) {
   const { id } = await params;
-  const book = await getBook(id);
+  const [book, genres] = await Promise.all([getBook(id), getGenres()]);
 
   if (!book) {
     notFound();
@@ -49,7 +61,7 @@ export default async function EditBookPage({ params }) {
       </div>
 
       <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
-        <EditBookClientWrapper book={book} />
+        <EditBookClientWrapper book={book} genres={genres} />
       </div>
     </div>
   );

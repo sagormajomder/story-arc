@@ -7,18 +7,12 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-const genres = [
-  'Fiction',
-  'Non-Fiction',
-  'Sci-Fi',
-  'Fantasy',
-  'Mystery',
-  'Biography',
-  'History',
-  'Self-Help',
-];
-
-export default function BookForm({ initialData, onSubmit, isSubmitting }) {
+export default function BookForm({
+  initialData,
+  onSubmit,
+  isSubmitting,
+  availableGenres = [],
+}) {
   const {
     register,
     handleSubmit,
@@ -26,12 +20,12 @@ export default function BookForm({ initialData, onSubmit, isSubmitting }) {
     watch,
     formState: { errors },
   } = useForm({
-    defaultValues: initialData || {
-      title: '',
-      author: '',
-      genre: '',
-      description: '',
-      cover: '',
+    defaultValues: {
+      title: initialData?.title || '',
+      author: initialData?.author || '',
+      genre: initialData?.genre || '',
+      description: initialData?.description || '',
+      cover: initialData?.cover || '',
     },
   });
 
@@ -126,9 +120,9 @@ export default function BookForm({ initialData, onSubmit, isSubmitting }) {
           {...register('genre', { required: 'Genre is required' })}
           className='w-full px-4 py-2 rounded-lg bg-secondary/50 border border-border focus:outline-none focus:ring-2 focus:ring-ring transition-all appearance-none'>
           <option value=''>Select a genre</option>
-          {genres.map(g => (
-            <option key={g} value={g}>
-              {g}
+          {availableGenres.map(g => (
+            <option key={g._id || g} value={g.name || g}>
+              {g.name || g}
             </option>
           ))}
         </select>

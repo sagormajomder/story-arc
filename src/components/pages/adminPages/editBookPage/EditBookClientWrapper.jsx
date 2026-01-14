@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function EditBookClientWrapper({ book }) {
+export default function EditBookClientWrapper({ book, genres = [] }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -70,6 +70,7 @@ export default function EditBookClientWrapper({ book }) {
       initialData={book}
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
+      availableGenres={genres}
     />
   );
 }

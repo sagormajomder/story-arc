@@ -2,7 +2,21 @@ import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import AddBookClientWrapper from '../../../../../components/pages/adminPages/addBookPage/AddBookClientWrapper';
 
-export default function AddBookPage() {
+async function getGenres() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/genres?limit=100`,
+    {
+      cache: 'no-store',
+    }
+  );
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.genres || [];
+}
+
+export default async function AddBookPage() {
+  const genres = await getGenres();
+
   return (
     <div className='p-8 max-w-2xl mx-auto'>
       <Link
@@ -22,7 +36,7 @@ export default function AddBookPage() {
       </div>
 
       <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
-        <AddBookClientWrapper />
+        <AddBookClientWrapper genres={genres} />
       </div>
     </div>
   );

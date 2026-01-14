@@ -45,7 +45,7 @@ export default async function ManageBooksPage({ searchParams }) {
     getGenres(),
   ]);
 
-  const { books, totalPages } = booksData;
+  const { books, totalPages, currentPage: apiCurrentPage } = booksData;
   const genres = ['All Genres', ...availableGenres];
 
   return (
