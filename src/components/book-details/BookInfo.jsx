@@ -1,3 +1,4 @@
+'use client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -104,7 +105,7 @@ const BookInfo = ({ book }) => {
 
   return (
     <div className='flex flex-col md:flex-row gap-8 items-start'>
-      <div className='w-full md:w-1/3 lg:w-1/4 rounded-lg overflow-hidden shadow-lg border-4 border-gray-800 relative group aspect-2/3'>
+      <div className='w-full md:w-1/3 lg:w-1/4 rounded-lg overflow-hidden shadow-lg border-4 border-border relative group aspect-2/3'>
         <Image
           src={book.cover}
           alt={book.title}
@@ -118,52 +119,54 @@ const BookInfo = ({ book }) => {
         <div>
           <div className='flex flex-wrap gap-3 mb-3'>
             {book.genre && (
-              <span className='px-3 py-1 bg-green-900/30 text-green-400 text-xs font-bold uppercase tracking-wider rounded-full border border-green-800'>
+              <span className='px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full border border-primary/20'>
                 {book.genre}
               </span>
             )}
           </div>
-          <h1 className='text-4xl md:text-5xl font-serif font-bold text-white mb-2 leading-tight'>
+          <h1 className='text-4xl md:text-5xl font-serif font-bold text-foreground mb-2 leading-tight'>
             {book.title}
           </h1>
-          <p className='text-xl text-gray-400 italic'>by {book.author}</p>
+          <p className='text-xl text-muted-foreground italic'>
+            by {book.author}
+          </p>
         </div>
 
-        <div className='flex items-center gap-8 py-4 border-y border-gray-800'>
+        <div className='flex items-center gap-8 py-4 border-y border-border'>
           <div>
             <div className='flex items-center gap-2 mb-1'>
-              <span className='text-3xl font-bold text-green-500'>
+              <span className='text-3xl font-bold text-primary'>
                 {book.rating || 0}
               </span>
               <svg
-                className='w-6 h-6 text-green-500 fill-current'
+                className='w-6 h-6 text-primary fill-current'
                 viewBox='0 0 24 24'>
                 <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' />
               </svg>
             </div>
-            <p className='text-xs text-gray-500 uppercase tracking-wide'>
+            <p className='text-xs text-muted-foreground uppercase tracking-wide'>
               {book.totalRatings || 0} Ratings
             </p>
           </div>
           <div>
-            <div className='text-3xl font-bold text-white mb-1'>
+            <div className='text-3xl font-bold text-foreground mb-1'>
               {book.totalRatings || 0}
             </div>
-            <p className='text-xs text-gray-500 uppercase tracking-wide'>
+            <p className='text-xs text-muted-foreground uppercase tracking-wide'>
               Reviews
             </p>
           </div>
           <div>
-            <div className='text-3xl font-bold text-white mb-1'>
+            <div className='text-3xl font-bold text-foreground mb-1'>
               {book.year || 'N/A'}
             </div>
-            <p className='text-xs text-gray-500 uppercase tracking-wide'>
+            <p className='text-xs text-muted-foreground uppercase tracking-wide'>
               Published
             </p>
           </div>
         </div>
 
-        <div className='prose prose-invert max-w-none text-gray-300 leading-relaxed'>
+        <div className='prose prose-lg max-w-none text-muted-foreground leading-relaxed'>
           <p>{book.description}</p>
         </div>
 
@@ -171,7 +174,7 @@ const BookInfo = ({ book }) => {
           <button
             onClick={handleAddToShelf}
             disabled={loading || isInShelf}
-            className='px-8 py-3 bg-green-500 hover:bg-green-600 text-black font-bold rounded flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none disabled:bg-gray-600 disabled:text-gray-300'>
+            className='px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded flex items-center gap-2 transition-all shadow-lg hover:shadow-primary/30 disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none disabled:bg-muted disabled:text-muted-foreground'>
             {loading
               ? 'Adding...'
               : isInShelf

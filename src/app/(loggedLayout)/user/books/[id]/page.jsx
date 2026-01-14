@@ -28,7 +28,7 @@ export default async function BookDetailsPage({ params }) {
   }
 
   return (
-    <div className='min-h-screen bg-black text-white p-8 md:p-16 font-sans'>
+    <div className='min-h-screen bg-background text-foreground p-8 md:p-16 font-sans'>
       <div className='max-w-7xl mx-auto space-y-16'>
         <BookInfo book={book} />
         <BookReviewsSection bookId={id} />

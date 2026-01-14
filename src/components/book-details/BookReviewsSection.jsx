@@ -1,13 +1,16 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import ReviewList from './ReviewList';
 import WriteReview from './WriteReview';
 
 const BookReviewsSection = ({ bookId }) => {
   const [refreshKey, setRefreshKey] = useState(0);
+  const router = useRouter();
 
   const handleReviewAdded = () => {
     setRefreshKey(prev => prev + 1);
+    router.refresh();
   };
 
   return (

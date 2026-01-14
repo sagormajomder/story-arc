@@ -43,12 +43,12 @@ const ReviewList = ({ bookId }) => {
   return (
     <div className='space-y-6'>
       <div className='flex justify-between items-center mb-6'>
-        <h2 className='text-3xl font-serif font-bold text-white'>
+        <h2 className='text-3xl font-serif font-bold text-foreground'>
           Community Reviews
         </h2>
-        <div className='text-sm text-gray-400'>
+        <div className='text-sm text-muted-foreground'>
           Sort by:{' '}
-          <span className='text-white font-bold cursor-pointer'>
+          <span className='text-foreground font-bold cursor-pointer'>
             Most Recent
           </span>
         </div>
@@ -58,10 +58,10 @@ const ReviewList = ({ bookId }) => {
         {displayedReviews.map(review => (
           <div
             key={review._id}
-            className='bg-gray-900/50 p-6 rounded-lg border border-gray-800'>
+            className='bg-card p-6 rounded-lg border border-border shadow-sm'>
             <div className='flex justify-between items-start mb-4'>
               <div className='flex items-center gap-3'>
-                <div className='w-10 h-10 rounded-full overflow-hidden relative border border-gray-700'>
+                <div className='w-10 h-10 rounded-full overflow-hidden relative border border-input'>
                   <Image
                     src={review.userImage || '/placeholder-user.jpg'}
                     alt={review.userName}
@@ -71,10 +71,10 @@ const ReviewList = ({ bookId }) => {
                   />
                 </div>
                 <div>
-                  <h4 className='text-white font-bold text-sm'>
+                  <h4 className='text-foreground font-bold text-sm'>
                     {review.userName}
                   </h4>
-                  <p className='text-xs text-gray-500 uppercase'>
+                  <p className='text-xs text-muted-foreground uppercase'>
                     {review.role || 'Reader'} -{' '}
                     {formatDistanceToNow(new Date(review.createdAt), {
                       addSuffix: true,
@@ -88,8 +88,8 @@ const ReviewList = ({ bookId }) => {
                     key={i}
                     className={`w-4 h-4 ${
                       i < review.rating
-                        ? 'text-green-500 fill-current'
-                        : 'text-gray-700 fill-current'
+                        ? 'text-primary fill-current'
+                        : 'text-muted fill-current'
                     }`}
                     viewBox='0 0 24 24'>
                     <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' />
@@ -97,11 +97,11 @@ const ReviewList = ({ bookId }) => {
                 ))}
               </div>
             </div>
-            <p className='text-gray-300 italic font-serif leading-relaxed'>
+            <p className='text-muted-foreground italic font-serif leading-relaxed'>
               "{review.comment}"
             </p>
-            <div className='mt-4 flex gap-4 text-xs text-gray-500 font-bold uppercase tracking-wider'>
-              <button className='flex items-center gap-1 hover:text-white transition-colors'>
+            <div className='mt-4 flex gap-4 text-xs text-muted-foreground font-bold uppercase tracking-wider'>
+              <button className='flex items-center gap-1 hover:text-foreground transition-colors'>
                 <svg
                   className='w-4 h-4'
                   fill='none'
@@ -116,7 +116,7 @@ const ReviewList = ({ bookId }) => {
                 </svg>
                 Helpful ({Math.floor(Math.random() * 50)})
               </button>
-              <button className='flex items-center gap-1 hover:text-white transition-colors'>
+              <button className='flex items-center gap-1 hover:text-foreground transition-colors'>
                 <svg
                   className='w-4 h-4'
                   fill='none'
@@ -140,7 +140,7 @@ const ReviewList = ({ bookId }) => {
         <div className='text-center pt-4'>
           <button
             onClick={() => setShowAll(!showAll)}
-            className='text-green-500 font-bold hover:text-green-400 transition-colors uppercase tracking-widest text-sm'>
+            className='text-primary font-bold hover:text-primary/80 transition-colors uppercase tracking-widest text-sm'>
             {showAll ? 'Show Less' : `View all ${reviews.length} reviews`}
           </button>
         </div>

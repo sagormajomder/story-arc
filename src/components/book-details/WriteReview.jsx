@@ -55,11 +55,11 @@ const WriteReview = ({ bookId, onReviewAdded }) => {
   };
 
   return (
-    <div className='bg-gray-900/30 p-8 rounded-lg border border-gray-800 mb-12'>
-      <h3 className='text-2xl font-serif font-bold text-white mb-2'>
+    <div className='bg-card p-8 rounded-lg border border-border mb-12 shadow-sm'>
+      <h3 className='text-2xl font-serif font-bold text-foreground mb-2'>
         Rate this book
       </h3>
-      <p className='text-gray-400 mb-6 text-sm'>
+      <p className='text-muted-foreground mb-6 text-sm'>
         Share your thoughts with the community.
       </p>
 
@@ -76,8 +76,8 @@ const WriteReview = ({ bookId, onReviewAdded }) => {
               <svg
                 className={`w-8 h-8 ${
                   star <= (hoverRating || rating)
-                    ? 'text-green-500 fill-current'
-                    : 'text-gray-700 fill-current'
+                    ? 'text-primary fill-current'
+                    : 'text-muted fill-current'
                 }`}
                 viewBox='0 0 24 24'>
                 <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' />
@@ -90,13 +90,13 @@ const WriteReview = ({ bookId, onReviewAdded }) => {
           value={comment}
           onChange={e => setComment(e.target.value)}
           placeholder='Write your review here...'
-          className='w-full bg-black/50 border border-gray-700 rounded p-4 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none min-h-[100px]'
+          className='w-full bg-input/50 border border-input rounded p-4 text-foreground focus:border-primary focus:ring-1 focus:ring-primary outline-none min-h-[100px]'
           required></textarea>
 
         <button
           type='submit'
           disabled={loading}
-          className='w-full py-3 bg-white hover:bg-gray-200 text-black font-bold font-serif rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed'>
+          className='w-full py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold font-serif rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed'>
           {loading ? 'Submitting...' : 'Write a Review'}
         </button>
       </form>
