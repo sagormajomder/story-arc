@@ -2,6 +2,7 @@ import Container from './Container';
 import Logo from './header/Logo';
 import MobileNav from './header/MobileNav';
 import NavLinks from './header/NavLinks';
+import ThemeToggle from './header/ThemeToggle';
 import UserProfile from './header/UserProfile';
 
 export default function Header() {
@@ -16,7 +17,8 @@ export default function Header() {
           <NavLinks className='hidden md:flex items-center' />
 
           {/* User Profile (Desktop) */}
-          <div className='hidden md:flex'>
+          <div className='hidden md:flex items-center gap-2'>
+            <ThemeToggle />
             <UserProfile />
           </div>
 
