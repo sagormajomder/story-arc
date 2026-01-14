@@ -1,11 +1,13 @@
 'use client';
 
 import BookForm from '@/components/books/BookForm';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function EditBookClientWrapper({ book, genres = [] }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -20,6 +22,7 @@ export default function EditBookClientWrapper({ book, genres = [] }) {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.token}`,
           },
           body: JSON.stringify(data),
         }
@@ -47,6 +50,9 @@ export default function EditBookClientWrapper({ book, genres = [] }) {
         `${process.env.NEXT_PUBLIC_API_URL}/books/${book._id}`,
         {
           method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.token}`,
+          },
         }
       );
 

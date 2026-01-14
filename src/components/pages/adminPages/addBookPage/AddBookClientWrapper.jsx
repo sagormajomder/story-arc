@@ -1,11 +1,13 @@
 'use client';
 
 import BookForm from '@/components/books/BookForm';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function AddBookClientWrapper({ genres = [] }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -16,6 +18,7 @@ export default function AddBookClientWrapper({ genres = [] }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.token}`,
         },
         body: JSON.stringify(data),
       });

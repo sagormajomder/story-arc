@@ -13,10 +13,10 @@ export default function AuthLeftSection({ title, subtitle, children }) {
           className='object-cover opacity-60 mix-blend-overlay'
           priority
         />
-        <div className='absolute inset-0 bg-primary/40 mix-blend-multiply' />
+        <div className='absolute inset-0 bg-black/40 mix-blend-multiply' />
       </div>
 
-      <div className='relative z-10 w-full max-w-lg px-12 text-primary-foreground'>
+      <div className='relative z-10 w-full max-w-lg px-12 text-white'>
         <div className='flex items-center gap-2 mb-8'>
           <FiBook className='text-[2.5rem]' />
           <h1 className='text-3xl font-bold tracking-tight'>Story Arc</h1>

@@ -1,11 +1,19 @@
 import UserStats from '@/components/users/UserStats';
 import UserTable from '@/components/users/UserTable';
 
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getServerSession } from 'next-auth';
+
 async function getUsers(page = 1) {
+  const session = await getServerSession(authOptions);
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/users?page=${page}&limit=10`,
     {
       cache: 'no-store',
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
     }
   );
 

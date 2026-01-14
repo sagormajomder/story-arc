@@ -14,16 +14,19 @@ export default function Header() {
           <Logo />
 
           {/* Desktop Navigation Links */}
-          <NavLinks className='hidden md:flex items-center' />
+          <NavLinks className='hidden lg:flex items-center' />
 
-          {/* User Profile (Desktop) */}
-          <div className='hidden md:flex items-center gap-2'>
-            <ThemeToggle />
-            <UserProfile />
+          {/* Right Side Actions */}
+          <div className='flex items-center gap-2'>
+            {/* User Profile (Desktop/Tablet) */}
+            <div className='hidden md:flex items-center gap-2'>
+              <ThemeToggle />
+              <UserProfile />
+            </div>
+
+            {/* Mobile Menu */}
+            <MobileNav />
           </div>
-
-          {/* Mobile Menu */}
-          <MobileNav />
         </nav>
       </Container>
     </header>
