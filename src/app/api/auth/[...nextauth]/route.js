@@ -39,41 +39,83 @@ export const authOptions = {
       },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+  },
   callbacks: {
     async redirect({ url, baseUrl }) {
       return url || baseUrl;
     },
     async jwt({ token, user, account }) {
-      if (account) {
-        if (account.provider === 'google') {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/users/google`,
-            {
-              method: 'POST',
-              body: JSON.stringify({
-                name: user.name,
-                email: user.email,
-                image: user.image,
-              }),
-              headers: { 'Content-Type': 'application/json' },
+      console.log('JWT Callback Start. Token Keys:', Object.keys(token));
+
+      // Initial sign on
+      // 'user' is defined ONLY on the initial sign-in
+      if (user) {
+        console.log('NextAuth: Initial Sign-in. Provider:', account?.provider);
+
+        if (account?.provider === 'google') {
+          try {
+            // Sync with backend for Google
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/users/google`,
+              {
+                method: 'POST',
+                body: JSON.stringify({
+                  name: user.name,
+                  email: user.email,
+                  profileImage: user.image,
+                }),
+                headers: { 'Content-Type': 'application/json' },
+              }
+            );
+
+            if (res.ok) {
+              const backendUser = await res.json();
+              console.log(
+                'NextAuth: Google Login Success. Role:',
+                backendUser.role
+              );
+
+              token.id = backendUser._id;
+              token.role = backendUser.role || 'user';
+              token.accessToken = backendUser.token;
+              token.picture = backendUser.profileImage;
+            } else {
+              console.error(
+                'NextAuth: Google Login Backend Failed',
+                res.status
+              );
             }
-          );
-          if (res.ok) {
-            const backendUser = await res.json();
-            token.user = backendUser;
-            token.role = backendUser.role || 'user';
+          } catch (error) {
+            console.error('NextAuth: Google Login Error', error);
           }
-        } else if (user) {
-          token.user = user;
-          token.role = user.role;
+        } else {
+          // Credentials Login (or default)
+          console.log(
+            'NextAuth: Credentials Login Processing. Role:',
+            user.role
+          );
+
+          token.id = user._id;
+          token.role = user.role || 'user';
+          token.accessToken = user.token;
+          token.picture = user.profileImage;
         }
       }
+
+      console.log('JWT Callback End. Token Keys:', Object.keys(token)); // Verify keys exist here
       return token;
     },
     async session({ session, token }) {
-      if (token?.user) {
-        session.user = token.user;
-        session.role = token.role;
+      if (token) {
+        session.token = token.accessToken;
+        session.user = {
+          ...session.user,
+          id: token.id,
+          role: token.role || 'user',
+          profileImage: token.picture,
+        };
       }
       return session;
     },

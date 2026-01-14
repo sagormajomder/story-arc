@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { Edit2, RefreshCw, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -16,6 +17,7 @@ export default function TutorialList({
   totalTutorials,
   onEdit,
 }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const [deleteModal, setDeleteModal] = useState({
     open: false,
@@ -33,6 +35,9 @@ export default function TutorialList({
       `${process.env.NEXT_PUBLIC_API_URL}/tutorials/${tutorial._id}`,
       {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
       }
     ).then(async res => {
       if (!res.ok) throw new Error('Failed to delete');

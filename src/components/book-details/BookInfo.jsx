@@ -1,4 +1,3 @@
-'use client';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -27,14 +26,19 @@ const BookInfo = ({ book }) => {
 
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.token}`,
+            },
+          }
         );
         if (res.ok) {
           const userData = await res.json();
           if (
             userData.shelf &&
             Array.isArray(userData.shelf) &&
-            userData.shelf.includes(book._id)
+            userData.shelf.some(item => item.bookId === book._id)
           ) {
             setIsInShelf(true);
           }
@@ -58,7 +62,6 @@ const BookInfo = ({ book }) => {
       const userId = session.user._id || session.user.id;
 
       if (!userId) {
-        console.error('User ID not found in session', session.user);
         toast.error('User information missing');
         return;
       }
@@ -69,26 +72,31 @@ const BookInfo = ({ book }) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.token}`,
           },
-          body: JSON.stringify({ bookId: book._id }),
+          body: JSON.stringify({
+            bookId: book._id,
+            title: book.title,
+            cover: book.cover,
+          }),
         }
       );
 
-      const data = await res.json();
-
-      if (data.message === 'Book already in shelf' || res.ok) {
-        setIsInShelf(true);
-        toast.success(
-          data.message === 'Book already in shelf'
-            ? 'Book already in your shelf'
-            : 'Added to shelf successfully'
-        );
-      } else {
+      if (!res.ok) {
+        const data = await res.json();
         throw new Error(data.message || 'Failed to add to shelf');
       }
+
+      const data = await res.json();
+      setIsInShelf(true);
+      toast.success(data.message || 'Added to shelf');
     } catch (error) {
-      toast.error('Failed to add to shelf');
       console.error(error);
+      const msg = error.message || 'Failed to add to shelf';
+      if (msg.includes('already')) {
+        setIsInShelf(true);
+      }
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

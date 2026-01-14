@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Camera, Eye, EyeOff, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -17,6 +18,7 @@ export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [previewImage, setPreviewImage] = useState(null);
+  const router = useRouter();
 
   const {
     register,
@@ -102,6 +104,7 @@ export default function RegisterForm() {
 
       if (result.insertedId) {
         toast.success('User registration successful!');
+        router.push('/login');
       }
     } catch (error) {
       console.error('Error during registration:', error);
@@ -134,7 +137,7 @@ export default function RegisterForm() {
                   src={previewImage}
                   alt='Profile Preview'
                   fill
-                  sizes=''
+                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                   className='w-full h-full object-cover'
                 />
               ) : (

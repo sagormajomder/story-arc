@@ -3,11 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function AddGenreForm() {
+  const { data: session } = useSession();
   const router = useRouter();
   const [name, setName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,21 +20,16 @@ export default function AddGenreForm() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/genres`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: name.trim() }),
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/genres`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.token}`,
+        },
+        body: JSON.stringify({ name: name.trim() }),
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create genre');
-      }
+      if (!res.ok) throw new Error('Failed to create genre');
 
       toast.success('Genre created successfully');
       setName('');

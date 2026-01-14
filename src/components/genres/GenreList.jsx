@@ -3,20 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Edit2, Shapes, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import toast from 'react-hot-toast'; // Assuming you have this or similar
-// If you don't have a Dialog component, we'll use a basic prompt/confirm for now or build a modal.
-// The task says "Edit/Delete actions".
-// I'll assume standard shadcn/ui Dialog is available or simple implementation.
-// Let's check if Dialog exists in previous file list... not explicitly, but Alert Dialog was there.
-// I will use basic state for modals for now to be safe, or just reuse the Delete Modal pattern.
-
-// Simulating a simple Edit Modal inline if shadcn Dialog isn't fully set up,
-// or use the one if available. The user prompt mentioned "DeleteBookModal" which uses "AlertDialog".
-// I'll implemented a quick custom Edit/Delete handling using standard state.
+import toast from 'react-hot-toast';
 
 export default function GenreList({ genres }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const [editingGenre, setEditingGenre] = useState(null);
   const [deletingGenre, setDeletingGenre] = useState(null);
@@ -37,7 +30,10 @@ export default function GenreList({ genres }) {
         `${process.env.NEXT_PUBLIC_API_URL}/genres/${editingGenre._id}`,
         {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.token}`,
+          },
           body: JSON.stringify({ name: newName.trim() }),
         }
       );
@@ -58,7 +54,12 @@ export default function GenreList({ genres }) {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/genres/${deletingGenre._id}`,
-        { method: 'DELETE' }
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.token}`,
+          },
+        }
       );
       if (!res.ok) throw new Error('Failed to delete');
       toast.success('Genre deleted');

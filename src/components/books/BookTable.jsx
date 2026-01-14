@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,6 +11,7 @@ import { Button } from '../ui/button';
 import DeleteBookModal from './DeleteBookModal';
 
 export default function BookTable({ books, currentPage, totalPages }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -31,16 +33,16 @@ export default function BookTable({ books, currentPage, totalPages }) {
     if (!selectedBook) return;
     setIsDeleting(true);
     try {
-      const response = await fetch(
+      const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/books/${selectedBook._id}`,
         {
           method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.token}`,
+          },
         }
       );
-
-      if (!response.ok) {
-        throw new Error('Failed to delete book');
-      }
+      if (!res.ok) throw new Error('Failed to delete book');
 
       toast.success('Book deleted successfully');
       router.refresh(); // Refresh Server Component data

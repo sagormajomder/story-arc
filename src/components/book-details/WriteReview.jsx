@@ -1,4 +1,3 @@
-'use client';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -25,6 +24,7 @@ const WriteReview = ({ bookId, onReviewAdded }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.token}`,
         },
         body: JSON.stringify({
           bookId,
@@ -37,7 +37,8 @@ const WriteReview = ({ bookId, onReviewAdded }) => {
       });
 
       if (!res.ok) {
-        throw new Error('Failed to submit review');
+        const data = await res.json();
+        throw new Error(data.message || 'Failed to submit review');
       }
 
       toast.success('Review submitted successfully');
@@ -46,7 +47,8 @@ const WriteReview = ({ bookId, onReviewAdded }) => {
       if (onReviewAdded) onReviewAdded();
     } catch (error) {
       console.error(error);
-      toast.error('Failed to submit review');
+      const msg = error.message || 'Failed to submit review';
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

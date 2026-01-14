@@ -12,6 +12,7 @@ export function TutorialCard({ tutorial }) {
           src={tutorial.thumbnail}
           alt={tutorial.title}
           fill
+          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           className='object-cover opacity-90 group-hover:opacity-100 transition-opacity'
         />
         <div className='absolute inset-0 flex items-center justify-center'>

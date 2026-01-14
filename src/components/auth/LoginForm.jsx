@@ -1,7 +1,7 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 import GoogleLogin from '@/components/auth/GoogleLogin';
@@ -24,7 +24,10 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm();
 
+  const { data: session } = useSession(); // Access session data
   const router = useRouter();
+  const searchParams = useSearchParams(); // To get callbackUrl
+  const callbackUrl = searchParams.get('callbackUrl');
 
   const onSubmit = async data => {
     setIsLoading(true);
@@ -40,7 +43,28 @@ export default function LoginForm() {
         toast.error('Invalid email or password');
       } else {
         toast.success('Logged in successfully!');
-        router.push('/admin/dashboard');
+
+        // If there's a callback URL, redirect there
+        if (callbackUrl) {
+          router.push(callbackUrl);
+          router.refresh();
+          return;
+        }
+
+        // Wait for session to be available
+        const sessionRes = await fetch('/api/auth/session');
+        const sessionData = await sessionRes.json();
+
+        console.log('Login Success. Session Role:', sessionData?.user?.role);
+
+        if (sessionData?.user?.role === 'admin') {
+          router.push('/admin/dashboard');
+        } else if (sessionData?.user?.role === 'user') {
+          router.push('/user/dashboard');
+        } else {
+          // Fallback
+          router.push('/');
+        }
         router.refresh();
       }
     } catch (error) {

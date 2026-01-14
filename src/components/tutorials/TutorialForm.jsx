@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Upload, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,6 +18,7 @@ const CATEGORIES = [
 ];
 
 export default function TutorialForm({ editingTutorial, onCancel, onSuccess }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
@@ -58,7 +60,10 @@ export default function TutorialForm({ editingTutorial, onCancel, onSuccess }) {
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.token}`,
+        },
         body: JSON.stringify(data),
       });
 

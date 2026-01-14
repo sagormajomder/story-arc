@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, MoreVertical, Shield } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -20,6 +21,7 @@ export default function UserTable({
   totalPages,
   totalUsers,
 }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const [updatingId, setUpdatingId] = useState(null);
 
@@ -37,7 +39,10 @@ export default function UserTable({
         `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/role`,
         {
           method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.token}`,
+          },
           body: JSON.stringify({ role: newRole }),
         }
       );
