@@ -39,10 +39,10 @@ Please follow the below instructions to run this project in your machine:
 1. Clone this repository
 
    ```sh
-   git clone git clone https://github.com/sagormajomder/story-arc.git
+   git clone https://github.com/sagormajomder/story-arc.git
    ```
 
-2. Open the directory "game-matrix" into visual studio code
+2. Open the directory "story-arc" into visual studio code
 3. Open Terminal and run `npm i` to install all dependencies
 4. Set up environment variables:
 
