@@ -12,13 +12,13 @@ const BookInfo = ({ book }) => {
   useEffect(() => {
     // Check if session has user (optimistic check)
     if (session?.user?.shelf && Array.isArray(session.user.shelf)) {
-      if (session.user.shelf.includes(book._id)) {
+      const found = session.user.shelf.some(item => item.bookId === book._id);
+      if (found) {
         setIsInShelf(true);
         return;
       }
     }
 
-    // Fetch fresh user data to be sure
     const checkShelfStatus = async () => {
       if (!session?.user) return;
 
@@ -36,12 +36,9 @@ const BookInfo = ({ book }) => {
         );
         if (res.ok) {
           const userData = await res.json();
-          if (
-            userData.shelf &&
-            Array.isArray(userData.shelf) &&
-            userData.shelf.some(item => item.bookId === book._id)
-          ) {
-            setIsInShelf(true);
+          if (userData.shelf && Array.isArray(userData.shelf)) {
+            const found = userData.shelf.some(item => item.bookId === book._id);
+            if (found) setIsInShelf(true);
           }
         }
       } catch (error) {

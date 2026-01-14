@@ -21,6 +21,7 @@ export default function NavLinks({ className = '', onLinkClick }) {
     ];
   } else if (role === 'user') {
     links = [
+      { name: 'My Library', href: '/user/library' },
       { name: 'Books', href: '/user/books' },
       { name: 'Tutorials', href: '/user/tutorials' },
     ];
