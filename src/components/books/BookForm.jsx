@@ -26,6 +26,7 @@ export default function BookForm({
       genre: initialData?.genre || '',
       description: initialData?.description || '',
       cover: initialData?.cover || '',
+      year: initialData?.year || '',
     },
   });
 
@@ -107,6 +108,30 @@ export default function BookForm({
             <span className='text-red-500 text-xs'>
               {errors.author.message}
             </span>
+          )}
+        </div>
+
+        {/* Published Year */}
+        <div className='space-y-2 md:col-span-2'>
+          <label className='text-sm font-medium text-muted-foreground'>
+            Published Year
+          </label>
+          <input
+            type='number'
+            {...register('year', {
+              required: 'Published Year is required',
+              valueAsNumber: true,
+              min: { value: 1000, message: 'Invalid year' },
+              max: {
+                value: new Date().getFullYear(),
+                message: 'Year cannot be in the future',
+              },
+            })}
+            className='w-full px-4 py-2 rounded-lg bg-secondary/50 border border-border focus:outline-none focus:ring-2 focus:ring-ring transition-all'
+            placeholder='e.g. 2020'
+          />
+          {errors.year && (
+            <span className='text-red-500 text-xs'>{errors.year.message}</span>
           )}
         </div>
       </div>

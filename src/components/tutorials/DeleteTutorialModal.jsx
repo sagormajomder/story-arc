@@ -24,8 +24,8 @@ export default function DeleteTutorialModal({
           <AlertDialogTitle>Delete Tutorial?</AlertDialogTitle>
           <AlertDialogDescription>
             Are you sure you want to delete{' '}
-            <span className='font-bold'>"{title}"</span>? This action cannot be
-            undone.
+            <span className='font-bold'>&quot;{title}&quot;</span>? This action
+            cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
