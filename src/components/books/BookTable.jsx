@@ -56,9 +56,9 @@ export default function BookTable({ books, currentPage, totalPages }) {
 
   return (
     <>
-      <div className='border border-border rounded-xl overflow-hidden bg-card shadow-sm'>
-        <div className='overflow-x-auto'>
-          <table className='w-full text-left text-sm'>
+      <div className='border border-border rounded-xl overflow-hidden bg-card shadow-sm w-full  md:max-w-full'>
+        <div className='overflow-x-auto w-full'>
+          <table className='w-full text-left text-sm whitespace-nowrap'>
             <thead>
               <tr className='bg-muted/50 border-b border-border text-muted-foreground uppercase text-xs tracking-wider'>
                 <th className='px-6 py-4 font-medium'>Cover</th>

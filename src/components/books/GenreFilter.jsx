@@ -26,7 +26,7 @@ export default function GenreFilter({ genres }) {
           key={genre}
           onClick={() => handleGenreClick(genre)}
           variant={selectedGenre === genre ? 'default' : 'secondary'}
-          className={`rounded-full ${
+          className={`rounded-full whitespace-nowrap ${
             selectedGenre === genre
               ? 'bg-green-500 hover:bg-green-600 text-white'
               : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
