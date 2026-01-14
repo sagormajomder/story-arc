@@ -15,6 +15,7 @@ export default function NavLinks({ className = '', onLinkClick }) {
     links = [
       { name: 'Dashboard', href: '/admin/dashboard' },
       { name: 'Manage Books', href: '/admin/manage-books' },
+      { name: 'Review Moderation', href: '/admin/reviews' },
       { name: 'Manage Genres', href: '/admin/manage-genres' },
       { name: 'Manage Tutorials', href: '/admin/manage-tutorials' },
       { name: 'Manage Users', href: '/admin/manage-users' },

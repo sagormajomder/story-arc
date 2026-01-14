@@ -44,8 +44,8 @@ export default function LoginForm() {
       } else {
         toast.success('Logged in successfully!');
 
-        // If there's a callback URL, redirect there
-        if (callbackUrl) {
+        // If there's a callback URL (and it's not the login page itself), redirect there
+        if (callbackUrl && callbackUrl !== '/login') {
           router.push(callbackUrl);
           router.refresh();
           return;

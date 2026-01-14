@@ -61,7 +61,7 @@ export default function UserProfile() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onClick={() => signOut()}
+          onClick={() => signOut({ callbackUrl: '/login' })}
           className='text-red-600 focus:text-red-600 cursor-pointer'>
           <LogOut className='mr-2 h-4 w-4' />
           <span>Sign Out</span>
