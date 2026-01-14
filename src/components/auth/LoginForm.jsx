@@ -60,7 +60,7 @@ export default function LoginForm() {
         if (sessionData?.user?.role === 'admin') {
           router.push('/admin/dashboard');
         } else if (sessionData?.user?.role === 'user') {
-          router.push('/user/dashboard');
+          router.push('/user/library');
         } else {
           // Fallback
           router.push('/');

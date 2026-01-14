@@ -118,7 +118,7 @@ export default function RegisterForm() {
           router.push('/login');
         } else {
           // Default redirect for new users
-          router.push('/user/dashboard');
+          router.push('/user/library');
           router.refresh();
         }
       }
