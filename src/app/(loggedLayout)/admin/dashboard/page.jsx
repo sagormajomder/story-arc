@@ -1,5 +1,6 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import GenreChart from '@/components/admin/dashboard/GenreChart';
+import Container from '@/components/layouts/Container';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, MessageSquareWarning, Users } from 'lucide-react';
 import { getServerSession } from 'next-auth';
@@ -39,7 +40,7 @@ export default async function AdminDashboardPage() {
   const { stats, genreData } = await getDashboardData(session?.token);
 
   return (
-    <div className='container mx-auto p-6 space-y-8'>
+    <Container className='p-6 space-y-8'>
       {/* Header */}
       <div>
         <h1 className='text-3xl font-bold font-serif text-foreground mb-2'>
@@ -119,6 +120,6 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </Container>
   );
 }

@@ -17,7 +17,7 @@ const fetchBook = async id => {
 export default async function BookDetailsPage({ params }) {
   const { id } = await params;
   const book = await fetchBook(id);
-  console.log(book);
+  // console.log(book);
 
   if (!book) {
     return (

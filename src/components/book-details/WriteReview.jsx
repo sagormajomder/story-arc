@@ -41,7 +41,9 @@ const WriteReview = ({ bookId, onReviewAdded }) => {
         throw new Error(data.message || 'Failed to submit review');
       }
 
-      toast.success('Review submitted successfully');
+      toast.success(
+        'Review submitted successfully. Please wait for admin approved'
+      );
       setRating(0);
       setComment('');
       if (onReviewAdded) onReviewAdded();

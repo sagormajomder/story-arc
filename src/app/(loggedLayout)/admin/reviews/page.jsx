@@ -1,8 +1,9 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import Container from '@/components/layouts/Container';
 import { Badge } from '@/components/ui/badge';
 import { getServerSession } from 'next-auth';
-import ReviewFilters from './ReviewFilters';
-import ReviewTable from './ReviewTable';
+import ReviewFilters from '../../../../components/pages/adminPages/ReviewModerationPage/ReviewFilters';
+import ReviewTable from '../../../../components/pages/adminPages/ReviewModerationPage/ReviewTable';
 
 async function getReviews(token, status) {
   try {
@@ -31,7 +32,7 @@ export default async function ReviewModerationPage({ searchParams }) {
   const reviews = await getReviews(session?.token, filter);
 
   return (
-    <div className='container mx-auto p-6 space-y-8 min-h-screen'>
+    <Container className='p-6 space-y-8'>
       {/* Header */}
       <div>
         <div className='flex items-center gap-3 mb-2'>
@@ -50,6 +51,6 @@ export default async function ReviewModerationPage({ searchParams }) {
       <ReviewFilters />
 
       <ReviewTable reviews={reviews} token={session?.token} status={filter} />
-    </div>
+    </Container>
   );
 }
