@@ -22,6 +22,7 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const { data: session } = useSession(); // Access session data
@@ -74,6 +75,15 @@ export default function LoginForm() {
       setIsLoading(false);
     }
   };
+
+  function handleDemoUser() {
+    setValue('email', 'ex@gmail.com');
+    setValue('password', 'UserNo01%');
+  }
+  function handleDemoAdmin() {
+    setValue('email', 'admin@gmail.com');
+    setValue('password', 'AdminNo01%');
+  }
 
   return (
     <div className='w-full lg:w-1/2 flex items-center justify-center p-8 bg-background'>
@@ -149,6 +159,24 @@ export default function LoginForm() {
             disabled={isLoading}>
             {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
             Sign In
+          </Button>
+          <Button
+            variant='outline'
+            type='button'
+            className='w-full h-11 text-base shadow-primary/20'
+            onClick={handleDemoUser}
+            disabled={isLoading}>
+            {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            Sign In (Demo User)
+          </Button>
+          <Button
+            variant='outline'
+            type='button'
+            className='w-full h-11 text-base shadow-primary/20'
+            onClick={handleDemoAdmin}
+            disabled={isLoading}>
+            {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            Sign In (Demo Admin)
           </Button>
         </form>
 
