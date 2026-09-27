@@ -39,7 +39,7 @@ export default function DashboardHeader({ goal, stats }) {
             Authorization: `Bearer ${session.token}`,
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
 
       if (!res.ok) {

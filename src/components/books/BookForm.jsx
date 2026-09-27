@@ -189,8 +189,8 @@ export default function BookForm({
           {isSubmitting
             ? 'Saving...'
             : initialData
-            ? 'Update Information'
-            : 'Create Book'}
+              ? 'Update Information'
+              : 'Create Book'}
         </Button>
       </div>
     </form>
