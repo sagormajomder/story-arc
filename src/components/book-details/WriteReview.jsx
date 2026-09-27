@@ -42,7 +42,7 @@ const WriteReview = ({ bookId, onReviewAdded }) => {
       }
 
       toast.success(
-        'Review submitted successfully. Please wait for admin approved'
+        'Review submitted successfully. Please wait for admin approved',
       );
       setRating(0);
       setComment('');

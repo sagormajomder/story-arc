@@ -67,7 +67,7 @@ export default function RegisterForm() {
           {
             method: 'POST',
             body: formData,
-          }
+          },
         );
 
         const imageData = await res.json();
@@ -256,8 +256,8 @@ export default function RegisterForm() {
                       ? passwordStrength <= 2
                         ? 'bg-red-500' // Weak
                         : passwordStrength === 3
-                        ? 'bg-yellow-500' // Medium
-                        : 'bg-green-500' // Strong
+                          ? 'bg-yellow-500' // Medium
+                          : 'bg-green-500' // Strong
                       : 'bg-muted'
                   }`}
                 />

@@ -22,7 +22,7 @@ export const authOptions = {
               method: 'POST',
               body: JSON.stringify(credentials),
               headers: { 'Content-Type': 'application/json' },
-            }
+            },
           );
 
           const user = await res.json();
@@ -67,14 +67,14 @@ export const authOptions = {
                   profileImage: user.image,
                 }),
                 headers: { 'Content-Type': 'application/json' },
-              }
+              },
             );
 
             if (res.ok) {
               const backendUser = await res.json();
               console.log(
                 'NextAuth: Google Login Success. Role:',
-                backendUser.role
+                backendUser.role,
               );
 
               token.id = backendUser._id;
@@ -84,7 +84,7 @@ export const authOptions = {
             } else {
               console.error(
                 'NextAuth: Google Login Backend Failed',
-                res.status
+                res.status,
               );
             }
           } catch (error) {
@@ -94,7 +94,7 @@ export const authOptions = {
           // Credentials Login (or default)
           console.log(
             'NextAuth: Credentials Login Processing. Role:',
-            user.role
+            user.role,
           );
 
           token.id = user._id;
