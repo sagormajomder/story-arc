@@ -18,7 +18,7 @@ export interface IContinueReadingProps {
   currentBook: ICurrentBookItem | null;
 }
 
-const ContinueReading: FC<IContinueReadingProps> = ({ currentBook }) => {
+export const ContinueReading: FC<IContinueReadingProps> = ({ currentBook }) => {
   if (!currentBook) {
     return (
       <div className='bg-card border border-border rounded-xl p-8 flex flex-col items-center justify-center text-center h-[300px]'>
@@ -121,5 +121,3 @@ const ContinueReading: FC<IContinueReadingProps> = ({ currentBook }) => {
     </div>
   );
 };
-
-export default ContinueReading;

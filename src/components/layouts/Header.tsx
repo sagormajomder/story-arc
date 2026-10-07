@@ -1,11 +1,11 @@
-import Container from './Container';
-import Logo from './header/Logo';
-import MobileNav from './header/MobileNav';
-import NavLinks from './header/NavLinks';
-import ThemeToggle from './header/ThemeToggle';
-import UserProfile from './header/UserProfile';
+import { Container } from './Container';
+import { Logo } from './header/Logo';
+import { MobileNav } from './header/MobileNav';
+import { NavLinks } from './header/NavLinks';
+import { ThemeToggle } from './header/ThemeToggle';
+import { UserProfile } from './header/UserProfile';
 
-export default function Header() {
+export function Header() {
   return (
     <header className='sticky top-0 z-50 py-4 shadow-sm bg-background/80 backdrop-blur-md border-b border-border'>
       <Container>

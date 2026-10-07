@@ -8,7 +8,7 @@ export interface IBookReviewsSectionProps {
   bookId: string;
 }
 
-const BookReviewsSection: FC<IBookReviewsSectionProps> = ({ bookId }) => {
+export const BookReviewsSection: FC<IBookReviewsSectionProps> = ({ bookId }) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const router = useRouter();
 
@@ -28,5 +28,3 @@ const BookReviewsSection: FC<IBookReviewsSectionProps> = ({ bookId }) => {
     </div>
   );
 };
-
-export default BookReviewsSection;

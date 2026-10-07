@@ -10,7 +10,7 @@ export interface IBookInfoProps {
   book: IBook;
 }
 
-const BookInfo: FC<IBookInfoProps> = ({ book }) => {
+export const BookInfo: FC<IBookInfoProps> = ({ book }) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [isInShelf, setIsInShelf] = useState(false);
@@ -221,5 +221,3 @@ const BookInfo: FC<IBookInfoProps> = ({ book }) => {
     </div>
   );
 };
-
-export default BookInfo;

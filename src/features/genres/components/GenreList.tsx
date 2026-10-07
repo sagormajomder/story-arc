@@ -17,7 +17,7 @@ export interface IGenreListProps {
   genres: IGenreWithCount[];
 }
 
-export default function GenreList({ genres }: IGenreListProps) {
+export function GenreList({ genres }: IGenreListProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const [editingGenre, setEditingGenre] = useState<IGenreWithCount | null>(null);

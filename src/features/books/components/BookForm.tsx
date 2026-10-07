@@ -33,7 +33,7 @@ export interface IBookFormProps {
   availableGenres?: Array<{ _id?: string; name: string } | string>;
 }
 
-export default function BookForm({
+export function BookForm({
   initialData,
   onSubmit,
   isSubmitting,

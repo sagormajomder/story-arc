@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import DeleteTutorialModal from './DeleteTutorialModal';
+import { DeleteTutorialModal } from './DeleteTutorialModal';
 
 export interface ITutorialListProps {
   tutorials: (ITutorial & { status?: string })[];
@@ -19,7 +19,7 @@ export interface ITutorialListProps {
   onEdit?: (tutorial: ITutorial) => void;
 }
 
-export default function TutorialList({
+export function TutorialList({
   tutorials,
   currentPage,
   totalPages,

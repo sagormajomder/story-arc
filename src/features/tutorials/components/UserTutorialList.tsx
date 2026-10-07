@@ -19,7 +19,7 @@ export interface IUserTutorialListProps {
   };
 }
 
-export default function UserTutorialList({ initialData }: IUserTutorialListProps) {
+export function UserTutorialList({ initialData }: IUserTutorialListProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);

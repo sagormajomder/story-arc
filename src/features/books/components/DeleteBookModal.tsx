@@ -21,7 +21,7 @@ export interface IDeleteBookModalProps {
   isDeleting?: boolean;
 }
 
-export default function DeleteBookModal({
+export function DeleteBookModal({
   isOpen,
   onClose,
   onConfirm,

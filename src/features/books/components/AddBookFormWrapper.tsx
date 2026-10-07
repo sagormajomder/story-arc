@@ -1,6 +1,6 @@
 'use client';
 
-import BookForm, { IBookFormValues } from './BookForm';
+import { BookForm, IBookFormValues } from './BookForm';
 import { IGenre } from '@src/types/book';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,7 @@ export interface IAddBookClientWrapperProps {
   genres?: IGenre[] | string[];
 }
 
-export default function AddBookClientWrapper({
+export function AddBookFormWrapper({
   genres = [],
 }: IAddBookClientWrapperProps) {
   const { data: session } = useSession();
@@ -53,3 +53,5 @@ export default function AddBookClientWrapper({
     />
   );
 }
+
+export { AddBookFormWrapper as AddBookClientWrapper };

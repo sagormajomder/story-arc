@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-export default function AddGenreForm() {
+export function AddGenreForm() {
   const { data: session } = useSession();
   const router = useRouter();
   const [name, setName] = useState('');

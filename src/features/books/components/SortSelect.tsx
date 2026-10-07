@@ -5,7 +5,7 @@ export interface ISortSelectProps {
   onChange: (value: string) => void;
 }
 
-export default function SortSelect({ value, onChange }: ISortSelectProps) {
+export function SortSelect({ value, onChange }: ISortSelectProps) {
   return (
     <div className='relative'>
       <select

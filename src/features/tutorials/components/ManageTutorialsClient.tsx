@@ -1,7 +1,7 @@
 'use client';
 
-import TutorialForm from './TutorialForm';
-import TutorialList from './TutorialList';
+import { TutorialForm } from './TutorialForm';
+import { TutorialList } from './TutorialList';
 import { ITutorial } from '@src/types/tutorial';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ export interface IManageTutorialsClientProps {
   };
 }
 
-export default function ManageTutorialsClient({ data }: IManageTutorialsClientProps) {
+export function ManageTutorialsClient({ data }: IManageTutorialsClientProps) {
   const [editingTutorial, setEditingTutorial] = useState<ITutorial | null>(null);
 
   return (

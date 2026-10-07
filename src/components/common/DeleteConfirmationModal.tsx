@@ -24,7 +24,7 @@ export interface IDeleteConfirmationModalProps {
   isDeleting?: boolean;
 }
 
-export default function DeleteConfirmationModal({
+export function DeleteConfirmationModal({
   isOpen,
   onClose,
   onConfirm,

@@ -14,7 +14,7 @@ import { LogOut } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 
-export default function UserProfile() {
+export function UserProfile() {
   const { data: session } = useSession();
 
   if (!session) {

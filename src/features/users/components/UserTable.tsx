@@ -23,7 +23,7 @@ export interface IUserTableProps {
   totalUsers: number;
 }
 
-const UserTable: FC<IUserTableProps> = ({
+export const UserTable: FC<IUserTableProps> = ({
   users,
   currentPage,
   totalPages,
@@ -219,5 +219,3 @@ const UserTable: FC<IUserTableProps> = ({
     </div>
   );
 };
-
-export default UserTable;

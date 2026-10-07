@@ -8,7 +8,7 @@ export interface IGenreFilterProps {
   genres: string[];
 }
 
-export default function GenreFilter({ genres }: IGenreFilterProps) {
+export function GenreFilter({ genres }: IGenreFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedGenre = searchParams.get('genre') || 'All Genres';

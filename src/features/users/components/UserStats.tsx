@@ -6,7 +6,7 @@ export interface IUserStatsProps {
   adminRoles?: number;
 }
 
-const UserStats: FC<IUserStatsProps> = ({ activeUsers = 0, adminRoles = 0 }) => {
+export const UserStats: FC<IUserStatsProps> = ({ activeUsers = 0, adminRoles = 0 }) => {
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
       {/* Active Users Card */}
@@ -45,5 +45,3 @@ const UserStats: FC<IUserStatsProps> = ({ activeUsers = 0, adminRoles = 0 }) => 
     </div>
   );
 };
-
-export default UserStats;

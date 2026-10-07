@@ -9,7 +9,7 @@ export interface IReviewListProps {
   bookId: string;
 }
 
-const ReviewList: FC<IReviewListProps> = ({ bookId }) => {
+export const ReviewList: FC<IReviewListProps> = ({ bookId }) => {
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -158,5 +158,3 @@ const ReviewList: FC<IReviewListProps> = ({ bookId }) => {
     </div>
   );
 };
-
-export default ReviewList;

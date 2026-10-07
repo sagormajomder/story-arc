@@ -7,7 +7,7 @@ export interface IAuthProviderProps {
   children: React.ReactNode;
 }
 
-export default function AuthProvider({ children }: IAuthProviderProps) {
+export function AuthProvider({ children }: IAuthProviderProps) {
   return (
     <Suspense fallback={null}>
       <SessionProvider>{children}</SessionProvider>

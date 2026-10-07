@@ -23,7 +23,7 @@ export interface IDashboardHeaderProps {
   stats?: IDashboardStats;
 }
 
-const DashboardHeader: FC<IDashboardHeaderProps> = ({ goal, stats }) => {
+export const DashboardHeader: FC<IDashboardHeaderProps> = ({ goal, stats }) => {
   const { data: session } = useSession();
   const userName = session?.user?.name || 'User';
 
@@ -197,5 +197,3 @@ const DashboardHeader: FC<IDashboardHeaderProps> = ({ goal, stats }) => {
     </div>
   );
 };
-
-export default DashboardHeader;

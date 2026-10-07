@@ -8,7 +8,7 @@ export interface IAuthLeftSectionProps {
   children?: React.ReactNode;
 }
 
-export default function AuthLeftSection({
+export function AuthLeftSection({
   title,
   subtitle,
   children,

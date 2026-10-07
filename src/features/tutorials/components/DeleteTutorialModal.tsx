@@ -18,7 +18,7 @@ export interface IDeleteTutorialModalProps {
   title?: string;
 }
 
-export default function DeleteTutorialModal({
+export function DeleteTutorialModal({
   isOpen,
   onClose,
   onConfirm,

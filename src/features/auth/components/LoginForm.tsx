@@ -4,7 +4,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
-import GoogleLogin from './GoogleLogin';
+import { GoogleLogin } from './GoogleLogin';
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
 import { Label } from '@src/components/ui/label';
@@ -23,7 +23,7 @@ const loginSchema = z.object({
 
 export type ILoginFormValues = z.infer<typeof loginSchema>;
 
-export default function LoginForm() {
+export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 

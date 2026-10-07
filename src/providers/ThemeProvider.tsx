@@ -5,7 +5,7 @@ import * as React from 'react';
 
 export type IThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
 
-export default function ThemeProvider({
+export function ThemeProvider({
   children,
   ...props
 }: IThemeProviderProps) {

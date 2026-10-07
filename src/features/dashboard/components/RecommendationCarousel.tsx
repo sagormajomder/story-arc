@@ -11,7 +11,7 @@ export interface IRecommendationCarouselProps {
   books?: IBook[];
 }
 
-const RecommendationCarousel: FC<IRecommendationCarouselProps> = ({ books }) => {
+export const RecommendationCarousel: FC<IRecommendationCarouselProps> = ({ books }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -93,5 +93,3 @@ const RecommendationCarousel: FC<IRecommendationCarouselProps> = ({ books }) => 
     </div>
   );
 };
-
-export default RecommendationCarousel;

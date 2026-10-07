@@ -1,6 +1,6 @@
 import { FiBook } from 'react-icons/fi';
 
-export default function Logo() {
+export function Logo() {
   return (
     <div className='flex items-center gap-2 text-primary'>
       <FiBook className='text-3xl' />

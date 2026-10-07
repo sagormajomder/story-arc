@@ -40,7 +40,7 @@ export interface ITutorialFormProps {
   onSuccess?: () => void;
 }
 
-export default function TutorialForm({
+export function TutorialForm({
   editingTutorial,
   onCancel,
   onSuccess,

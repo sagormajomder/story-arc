@@ -4,7 +4,7 @@ import { signIn } from 'next-auth/react';
 import { FcGoogle } from 'react-icons/fc';
 import { Button } from '@src/components/ui/button';
 
-export default function GoogleLogin() {
+export function GoogleLogin() {
   const handleGoogleLogin = () => {
     signIn('google', { callbackUrl: '/admin/dashboard' });
   };

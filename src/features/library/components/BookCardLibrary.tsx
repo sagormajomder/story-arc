@@ -14,7 +14,7 @@ export interface IBookCardLibraryProps {
   onUpdate: () => void;
 }
 
-const BookCardLibrary: FC<IBookCardLibraryProps> = ({ item, onUpdate }) => {
+export const BookCardLibrary: FC<IBookCardLibraryProps> = ({ item, onUpdate }) => {
   const book = item.book;
   const { data: session } = useSession();
 
@@ -207,5 +207,3 @@ const BookCardLibrary: FC<IBookCardLibraryProps> = ({ item, onUpdate }) => {
     </div>
   );
 };
-
-export default BookCardLibrary;

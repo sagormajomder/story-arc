@@ -12,7 +12,7 @@ export interface IShelfTabProps {
   BookCard: ComponentType<IBookCardLibraryProps>;
 }
 
-const ShelfTab: FC<IShelfTabProps> = ({
+export const ShelfTab: FC<IShelfTabProps> = ({
   items,
   status,
   onUpdate,
@@ -41,5 +41,3 @@ const ShelfTab: FC<IShelfTabProps> = ({
     </div>
   );
 };
-
-export default ShelfTab;

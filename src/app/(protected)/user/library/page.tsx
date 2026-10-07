@@ -1,4 +1,4 @@
-import Container from '@src/components/layouts/Container';
+import { Container } from '@src/components/layouts/Container';
 import { LibraryClient } from '@src/features/library/library.index';
 import { Metadata } from 'next';
 

@@ -7,11 +7,11 @@ import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
-import Container from '../Container';
-import NavLinks from './NavLinks';
-import ThemeToggle from './ThemeToggle';
+import { Container } from '../Container';
+import { NavLinks } from './NavLinks';
+import { ThemeToggle } from './ThemeToggle';
 
-export default function MobileNav() {
+export function MobileNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
 

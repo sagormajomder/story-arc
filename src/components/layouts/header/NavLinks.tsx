@@ -15,7 +15,7 @@ export interface INavLinksProps {
   onLinkClick?: () => void;
 }
 
-export default function NavLinks({ className = '', onLinkClick }: INavLinksProps) {
+export function NavLinks({ className = '', onLinkClick }: INavLinksProps) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const role = session?.user?.role;

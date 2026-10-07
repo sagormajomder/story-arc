@@ -9,7 +9,7 @@ export interface IBookCardProps {
   book: IBook;
 }
 
-export default function BookCard({ book }: IBookCardProps) {
+export function BookCard({ book }: IBookCardProps) {
   return (
     <Link href={`/user/books/${book._id}` as any} className='group block'>
       <div className='relative aspect-[2/3] overflow-hidden rounded-lg shadow-md mb-3'>

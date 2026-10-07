@@ -19,7 +19,7 @@ export interface IWriteReviewProps {
   onReviewAdded?: () => void;
 }
 
-const WriteReview: FC<IWriteReviewProps> = ({ bookId, onReviewAdded }) => {
+export const WriteReview: FC<IWriteReviewProps> = ({ bookId, onReviewAdded }) => {
   const { data: session } = useSession();
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -141,5 +141,3 @@ const WriteReview: FC<IWriteReviewProps> = ({ bookId, onReviewAdded }) => {
     </div>
   );
 };
-
-export default WriteReview;

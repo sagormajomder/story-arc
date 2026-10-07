@@ -4,8 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@src/components/ui/tab
 import { IBook, ILibraryItem } from '@src/types';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import BookCardLibrary from './BookCardLibrary';
-import ShelfTab from './ShelfTab';
+import { BookCardLibrary } from './BookCardLibrary';
+import { ShelfTab } from './ShelfTab';
 
 interface IShelfApiResponseItem {
   bookId: string;
@@ -14,7 +14,7 @@ interface IShelfApiResponseItem {
   totalPages?: number;
 }
 
-export default function LibraryClient() {
+export function LibraryClient() {
   const { data: session } = useSession();
   const [libraryItems, setLibraryItems] = useState<ILibraryItem[]>([]);
   const [loading, setLoading] = useState(true);

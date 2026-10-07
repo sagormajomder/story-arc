@@ -1,6 +1,6 @@
 'use client';
 
-import DeleteConfirmationModal from '@src/components/common/DeleteConfirmationModal';
+import { DeleteConfirmationModal } from '@src/components/common/DeleteConfirmationModal';
 import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
 import { Badge } from '@src/components/ui/badge';
 import { Button } from '@src/components/ui/button';
@@ -18,7 +18,7 @@ export interface IReviewTableProps {
   status: string;
 }
 
-const ReviewTable: FC<IReviewTableProps> = ({ reviews, token, status }) => {
+export const ReviewTable: FC<IReviewTableProps> = ({ reviews, token, status }) => {
   const router = useRouter();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
@@ -208,5 +208,3 @@ const ReviewTable: FC<IReviewTableProps> = ({ reviews, token, status }) => {
     </>
   );
 };
-
-export default ReviewTable;

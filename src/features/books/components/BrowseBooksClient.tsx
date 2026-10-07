@@ -4,10 +4,10 @@ import { Button } from '@src/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import BookGrid from './BookGrid';
-import FilterSidebar from './FilterSidebar';
-import SearchBar from './SearchBar';
-import SortSelect from './SortSelect';
+import { BookGrid } from './BookGrid';
+import { FilterSidebar } from './FilterSidebar';
+import { SearchBar } from './SearchBar';
+import { SortSelect } from './SortSelect';
 import { useSession } from 'next-auth/react';
 import { IBook } from '@src/types/book';
 
@@ -15,7 +15,7 @@ export interface IBrowseBooksClientProps {
   initialGenres: string[];
 }
 
-export default function BrowseBooksClient({ initialGenres }: IBrowseBooksClientProps) {
+export function BrowseBooksClient({ initialGenres }: IBrowseBooksClientProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();

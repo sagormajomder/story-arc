@@ -20,7 +20,7 @@ export interface IGenreChartProps {
   data: IGenreChartItem[];
 }
 
-const GenreChart: FC<IGenreChartProps> = ({ data }) => {
+export const GenreChart: FC<IGenreChartProps> = ({ data }) => {
   return (
     <div className='h-[350px] w-full'>
       <ResponsiveContainer width='100%' height='100%'>
@@ -62,5 +62,3 @@ const GenreChart: FC<IGenreChartProps> = ({ data }) => {
     </div>
   );
 };
-
-export default GenreChart;

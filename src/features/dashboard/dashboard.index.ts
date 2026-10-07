@@ -1,8 +1,8 @@
-export { default as DashboardHeader } from './components/DashboardHeader';
-export { default as DashboardClient } from './components/DashboardClient';
-export { default as ReadingStats } from './components/ReadingStats';
-export { default as RecommendationCarousel } from './components/RecommendationCarousel';
-export { default as ContinueReading } from './components/ContinueReading';
-export { default as GenreChart } from './components/GenreChart';
+export { DashboardHeader } from './components/DashboardHeader';
+export { DashboardClient } from './components/DashboardClient';
+export { ReadingStats } from './components/ReadingStats';
+export { RecommendationCarousel } from './components/RecommendationCarousel';
+export { ContinueReading } from './components/ContinueReading';
+export { GenreChart } from './components/GenreChart';
 
 export * from './api/dashboard.api';

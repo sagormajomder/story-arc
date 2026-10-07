@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { FiBook } from 'react-icons/fi';
-import Container from './Container';
+import { Container } from './Container';
 
-export default function Footer() {
+export function Footer() {
   const [currentYear, setCurrentYear] = useState<number | string>(2026);
 
   useEffect(() => {

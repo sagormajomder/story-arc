@@ -10,7 +10,7 @@ export interface ISearchBarProps {
   initialValue?: string;
 }
 
-export default function SearchBar({ onSearch, initialValue = '' }: ISearchBarProps) {
+export function SearchBar({ onSearch, initialValue = '' }: ISearchBarProps) {
   const [value, setValue] = useState(initialValue);
 
   const debouncedValue = useDebounce(value, 500);

@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import GoogleLogin from './GoogleLogin';
+import { GoogleLogin } from './GoogleLogin';
 
 const registerSchema = z.object({
   name: z.string().min(1, 'Full Name is required'),
@@ -31,7 +31,7 @@ const registerSchema = z.object({
 
 export type IRegisterFormValues = z.infer<typeof registerSchema>;
 
-export default function RegisterForm() {
+export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);

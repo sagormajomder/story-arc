@@ -3,17 +3,17 @@
 import { IBook, IUser } from '@src/types';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import ContinueReading, { ICurrentBookItem } from './ContinueReading';
-import DashboardHeader, { IDashboardStats, IReadingGoal } from './DashboardHeader';
-import ReadingStats from './ReadingStats';
-import RecommendationCarousel from './RecommendationCarousel';
+import { ContinueReading, ICurrentBookItem } from './ContinueReading';
+import { DashboardHeader, IDashboardStats, IReadingGoal } from './DashboardHeader';
+import { ReadingStats } from './ReadingStats';
+import { RecommendationCarousel } from './RecommendationCarousel';
 
 export interface IDashboardStatsResponse {
   stats?: IDashboardStats;
   goal?: IReadingGoal;
 }
 
-export default function DashboardClient() {
+export function DashboardClient() {
   const { data: session } = useSession();
   const [statsData, setStatsData] = useState<IDashboardStatsResponse | null>(null);
   const [recommendations, setRecommendations] = useState<IBook[]>([]);

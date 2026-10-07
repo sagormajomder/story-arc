@@ -10,7 +10,7 @@ export interface IFilterSidebarProps {
   setRatingRange: (range: [number, number]) => void;
 }
 
-export default function FilterSidebar({
+export function FilterSidebar({
   genres = [],
   selectedGenres = [],
   setSelectedGenres,

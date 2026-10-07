@@ -1,14 +1,14 @@
 'use client';
 
 import { IBook } from '@src/types/book';
-import BookCard from './BookCard';
+import { BookCard } from './BookCard';
 
 export interface IBookGridProps {
   books: IBook[];
   loading?: boolean;
 }
 
-export default function BookGrid({ books, loading }: IBookGridProps) {
+export function BookGrid({ books, loading }: IBookGridProps) {
   if (loading) {
     return (
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-pulse'>

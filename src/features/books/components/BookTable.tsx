@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@src/components/ui/button';
-import DeleteBookModal from './DeleteBookModal';
+import { DeleteBookModal } from './DeleteBookModal';
 import { IBook } from '@src/types/book';
 
 export interface IBookTableProps {
@@ -17,7 +17,7 @@ export interface IBookTableProps {
   totalPages: number;
 }
 
-export default function BookTable({ books, currentPage, totalPages }: IBookTableProps) {
+export function BookTable({ books, currentPage, totalPages }: IBookTableProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();

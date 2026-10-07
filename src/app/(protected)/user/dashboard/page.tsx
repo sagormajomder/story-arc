@@ -1,4 +1,4 @@
-import Container from '@src/components/layouts/Container';
+import { Container } from '@src/components/layouts/Container';
 import { DashboardClient } from '@src/features/dashboard/dashboard.index';
 import { Metadata } from 'next';
 

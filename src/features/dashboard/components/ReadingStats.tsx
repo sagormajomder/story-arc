@@ -26,7 +26,7 @@ export interface IReadingStatsProps {
   };
 }
 
-const ReadingStats: FC<IReadingStatsProps> = ({ stats }) => {
+export const ReadingStats: FC<IReadingStatsProps> = ({ stats }) => {
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -285,5 +285,3 @@ const ReadingStats: FC<IReadingStatsProps> = ({ stats }) => {
     </div>
   );
 };
-
-export default ReadingStats;
