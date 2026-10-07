@@ -1,9 +1,9 @@
 'use client';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
@@ -46,23 +46,17 @@ export default function MobileNav() {
                   <div className='flex items-center gap-3'>
                     {session?.user ? (
                       <>
-                        <div className='h-10 w-10 rounded-full bg-secondary flex items-center justify-center overflow-hidden border border-border relative'>
-                          {userImage ? (
-                            <Image
-                              src={userImage}
-                              alt={session.user.name || 'User'}
-                              fill
-                              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                              className='object-cover'
-                            />
-                          ) : (
-                            <div className='h-full w-full bg-muted flex items-center justify-center text-xs'>
-                              {session.user.name
-                                ? session.user.name.charAt(0).toUpperCase()
-                                : 'U'}
-                            </div>
-                          )}
-                        </div>
+                        <Avatar size='lg' className='border border-border'>
+                          <AvatarImage
+                            src={userImage || undefined}
+                            alt={session.user.name || 'User'}
+                          />
+                          <AvatarFallback className='bg-muted text-xs font-semibold'>
+                            {session.user.name
+                              ? session.user.name.charAt(0).toUpperCase()
+                              : 'U'}
+                          </AvatarFallback>
+                        </Avatar>
                         <div className='flex flex-col'>
                           <span className='text-sm font-semibold text-foreground'>
                             {session.user.name}

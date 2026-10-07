@@ -1,8 +1,10 @@
 'use client';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -10,7 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogOut } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function UserProfile() {
@@ -40,33 +41,29 @@ export default function UserProfile() {
               {user.role || 'User'}
             </span>
           </div>
-          <div className='h-10 w-10 rounded-full bg-secondary flex items-center justify-center overflow-hidden border border-border relative group-hover:border-primary transition-colors'>
-            {user.profileImage ? (
-              <Image
-                src={user.profileImage}
-                alt={user.name || 'User'}
-                fill
-                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                className='object-cover'
-              />
-            ) : (
-              <div className='h-full w-full bg-muted flex items-center justify-center text-xs'>
-                {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-              </div>
-            )}
-          </div>
+          <Avatar size='lg' className='border border-border group-hover:border-primary transition-colors'>
+            <AvatarImage
+              src={user.profileImage || undefined}
+              alt={user.name || 'User'}
+            />
+            <AvatarFallback className='bg-muted text-xs font-semibold'>
+              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+            </AvatarFallback>
+          </Avatar>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-56'>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          onClick={() => signOut({ callbackUrl: '/login' })}
-          className='text-red-600 focus:text-red-600 cursor-pointer'>
-          <LogOut className='mr-2 h-4 w-4' />
-          <span>Sign Out</span>
-        </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className='text-red-600 focus:text-red-600 cursor-pointer'>
+            <LogOut className='mr-2 h-4 w-4' />
+            <span>Sign Out</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -17,7 +17,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+            `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
             {
               method: 'POST',
               body: JSON.stringify(credentials),
@@ -51,11 +51,11 @@ export const authOptions: NextAuthOptions = {
         if (account?.provider === 'google') {
           try {
             const res = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+              `${process.env.NEXT_PUBLIC_API_URL}/users/google`,
               {
                 method: 'POST',
                 body: JSON.stringify({
-                  fullName: user.name,
+                  name: user.name,
                   email: user.email,
                   profileImage: user.image,
                 }),
