@@ -1,4 +1,4 @@
-import { AuthLeftSection, LoginForm } from '@src/features/auth';
+import { AuthLeftSection, LoginForm } from '@src/features/auth/auth.index';
 import { Suspense } from 'react';
 
 export default function LoginPage() {

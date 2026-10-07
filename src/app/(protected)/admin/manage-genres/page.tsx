@@ -1,4 +1,4 @@
-import { AddGenreForm, GenreList, genresApi, IGenreWithCount } from '@src/features/genres';
+import { AddGenreForm, GenreList, genresApi, IGenreWithCount } from '@src/features/genres/genres.index';
 
 interface IGetGenresResponse {
   genres: IGenreWithCount[];

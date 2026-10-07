@@ -1,4 +1,4 @@
-import { ManageTutorialsClient, tutorialsApi } from '@src/features/tutorials';
+import { ManageTutorialsClient, tutorialsApi } from '@src/features/tutorials/tutorials.index';
 
 interface IManageTutorialsPageProps {
   searchParams: Promise<{ page?: string }>;

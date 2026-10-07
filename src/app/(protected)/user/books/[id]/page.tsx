@@ -1,4 +1,4 @@
-import { BookInfo, BookReviewsSection, booksApi } from '@src/features/books';
+import { BookInfo, BookReviewsSection, booksApi } from '@src/features/books/books.index';
 import { IBook } from '@src/types';
 
 interface IBookDetailsPageProps {

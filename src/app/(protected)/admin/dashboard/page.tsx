@@ -1,7 +1,7 @@
 import { authOptions } from '@src/app/api/auth/[...nextauth]/route';
 import Container from '@src/components/layouts/Container';
 import { Card, CardContent, CardHeader, CardTitle } from '@src/components/ui/card';
-import { dashboardApi, GenreChart } from '@src/features/dashboard';
+import { dashboardApi, GenreChart } from '@src/features/dashboard/dashboard.index';
 import { BookOpen, MessageSquareWarning, Users } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 

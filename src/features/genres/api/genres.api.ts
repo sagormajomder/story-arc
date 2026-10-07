@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '@src/config/api.config';
 import { apiClient } from '@src/lib/api-client';
-import type { IGenre } from '@src/features/books/types/book.types';
+import type { IGenre } from '@src/types/book';
 
 export interface IGenreWithCount extends IGenre {
   bookCount?: number;

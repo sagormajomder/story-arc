@@ -1,5 +1,5 @@
-import { booksApi, EditBookFormWrapper } from '@src/features/books';
-import { genresApi } from '@src/features/genres';
+import { booksApi, EditBookFormWrapper } from '@src/features/books/books.index';
+import { genresApi } from '@src/features/genres/genres.index';
 import { IBook, IGenre } from '@src/types';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

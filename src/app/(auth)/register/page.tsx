@@ -1,4 +1,4 @@
-import { AuthLeftSection, RegisterForm } from '@src/features/auth';
+import { AuthLeftSection, RegisterForm } from '@src/features/auth/auth.index';
 import Image from 'next/image';
 
 export default function RegisterPage() {

@@ -1,4 +1,4 @@
-import type { IShelfItem } from '@src/features/books/types/book.types';
+import type { IShelfItem } from '@src/types/book';
 
 export type UserRole = 'admin' | 'user' | string;
 

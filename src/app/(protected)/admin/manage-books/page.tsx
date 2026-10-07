@@ -1,5 +1,5 @@
 import { Button } from '@src/components/ui/button';
-import { booksApi, BookTable, GenreFilter, IBook } from '@src/features/books';
+import { booksApi, BookTable, GenreFilter, IBook } from '@src/features/books/books.index';
 import { IPaginatedResponse } from '@src/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';

@@ -1,5 +1,5 @@
-import { AddBookFormWrapper } from '@src/features/books';
-import { genresApi } from '@src/features/genres';
+import { AddBookFormWrapper } from '@src/features/books/books.index';
+import { genresApi } from '@src/features/genres/genres.index';
 import { IGenre } from '@src/types';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';

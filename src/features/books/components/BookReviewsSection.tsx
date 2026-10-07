@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
-import { ReviewList, WriteReview } from '@src/features/reviews';
+import { ReviewList, WriteReview } from '@src/features/reviews/reviews.index';
 
 export interface IBookReviewsSectionProps {
   bookId: string;
