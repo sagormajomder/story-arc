@@ -2,7 +2,7 @@
 
 import TutorialForm from './TutorialForm';
 import TutorialList from './TutorialList';
-import { ITutorial } from '@/types/tutorial';
+import { ITutorial } from '@src/types/tutorial';
 import { useState } from 'react';
 
 export interface IManageTutorialsClientProps {

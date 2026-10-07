@@ -1,6 +1,6 @@
 'use client';
 
-import { ILibraryItem } from '@/types';
+import { ILibraryItem } from '@src/types';
 import { ComponentType, FC } from 'react';
 import { IBookCardLibraryProps } from './BookCardLibrary';
 

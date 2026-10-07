@@ -1,7 +1,7 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { useDebounce } from '@/hooks/useDebounce';
+import { Input } from '@src/components/ui/input';
+import { useDebounce } from '@src/hooks/useDebounce';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 

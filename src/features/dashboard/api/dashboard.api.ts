@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from '@/config/api.config';
-import { apiClient } from '@/lib/api-client';
+import { API_ENDPOINTS } from '@src/config/api.config';
+import { apiClient } from '@src/lib/api-client';
 
 export interface IDashboardStats {
   totalBooks?: number;

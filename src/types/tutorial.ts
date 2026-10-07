@@ -1,1 +1,1 @@
-export * from '@/features/tutorials/types/tutorial.types';
+export * from '@src/features/tutorials/types/tutorial.types';

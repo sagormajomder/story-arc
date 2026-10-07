@@ -1,4 +1,4 @@
-import { tutorialsApi, UserTutorialList } from '@/features/tutorials';
+import { tutorialsApi, UserTutorialList } from '@src/features/tutorials';
 
 interface ITutorialsPageProps {
   searchParams: Promise<{ page?: string }>;

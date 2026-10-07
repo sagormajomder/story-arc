@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { Check, ChevronRight, Circle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@src/lib/utils';
 
 export type IDropdownMenuProps = MenuPrimitive.Root.Props;
 

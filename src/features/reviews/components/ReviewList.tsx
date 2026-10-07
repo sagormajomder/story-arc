@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { IReview } from '@/types';
+import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
+import { IReview } from '@src/types';
 import { formatDistanceToNow } from 'date-fns';
 import { FC, useEffect, useState } from 'react';
 

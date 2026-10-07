@@ -1,5 +1,5 @@
-import Container from '@/components/layouts/Container';
-import { DashboardClient } from '@/features/dashboard';
+import Container from '@src/components/layouts/Container';
+import { DashboardClient } from '@src/features/dashboard';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

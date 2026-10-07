@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { IGenre } from '@/types/book';
+import { Button } from '@src/components/ui/button';
+import { Input } from '@src/components/ui/input';
+import { IGenre } from '@src/types/book';
 import { Edit2, Shapes, Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';

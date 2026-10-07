@@ -4,8 +4,8 @@ import {
   TutorialCard,
   TutorialSkeleton,
 } from './TutorialCard';
-import { Button } from '@/components/ui/button';
-import { ITutorial } from '@/types/tutorial';
+import { Button } from '@src/components/ui/button';
+import { ITutorial } from '@src/types/tutorial';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';

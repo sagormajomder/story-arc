@@ -1,8 +1,8 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import Container from '@/components/layouts/Container';
-import { BrowseBooksClient } from '@/features/books';
-import { genresApi } from '@/features/genres';
-import { IGenre } from '@/types';
+import { authOptions } from '@src/app/api/auth/[...nextauth]/route';
+import Container from '@src/components/layouts/Container';
+import { BrowseBooksClient } from '@src/features/books';
+import { genresApi } from '@src/features/genres';
+import { IGenre } from '@src/types';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 

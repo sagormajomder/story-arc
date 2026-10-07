@@ -1,14 +1,14 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
+import { Button } from '@src/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { IUser } from '@/types';
+} from '@src/components/ui/dropdown-menu';
+import { IUser } from '@src/types';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, MoreVertical, Shield } from 'lucide-react';
 import { useSession } from 'next-auth/react';

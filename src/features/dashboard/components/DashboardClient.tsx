@@ -1,6 +1,6 @@
 'use client';
 
-import { IBook, IUser } from '@/types';
+import { IBook, IUser } from '@src/types';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import ContinueReading, { ICurrentBookItem } from './ContinueReading';

@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { booksApi, BookTable, GenreFilter, IBook } from '@/features/books';
-import { IPaginatedResponse } from '@/types';
+import { Button } from '@src/components/ui/button';
+import { booksApi, BookTable, GenreFilter, IBook } from '@src/features/books';
+import { IPaginatedResponse } from '@src/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 

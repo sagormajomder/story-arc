@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@src/components/ui/button';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { FiAlertTriangle } from 'react-icons/fi';

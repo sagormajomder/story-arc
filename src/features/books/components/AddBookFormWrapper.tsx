@@ -1,7 +1,7 @@
 'use client';
 
 import BookForm, { IBookFormValues } from './BookForm';
-import { IGenre } from '@/types/book';
+import { IGenre } from '@src/types/book';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

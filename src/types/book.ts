@@ -1,1 +1,1 @@
-export * from '@/features/books/types/book.types';
+export * from '@src/features/books/types/book.types';

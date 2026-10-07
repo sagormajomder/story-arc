@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { IBook } from '@/types/book';
+import { Button } from '@src/components/ui/button';
+import { IBook } from '@src/types/book';
 import { Upload } from 'lucide-react';
 import { CldUploadWidget } from 'next-cloudinary';
 import Image from 'next/image';

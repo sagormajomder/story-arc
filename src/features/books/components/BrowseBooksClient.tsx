@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@src/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import FilterSidebar from './FilterSidebar';
 import SearchBar from './SearchBar';
 import SortSelect from './SortSelect';
 import { useSession } from 'next-auth/react';
-import { IBook } from '@/types/book';
+import { IBook } from '@src/types/book';
 
 export interface IBrowseBooksClientProps {
   initialGenres: string[];

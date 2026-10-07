@@ -1,11 +1,11 @@
 'use client';
 
-import DeleteConfirmationModal from '@/components/common/DeleteConfirmationModal';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { IReview } from '@/types';
+import DeleteConfirmationModal from '@src/components/common/DeleteConfirmationModal';
+import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
+import { Badge } from '@src/components/ui/badge';
+import { Button } from '@src/components/ui/button';
+import { Card } from '@src/components/ui/card';
+import { IReview } from '@src/types';
 import { Check, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

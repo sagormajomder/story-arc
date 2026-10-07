@@ -1,6 +1,6 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { usersApi, UserStats, UserTable } from '@/features/users';
-import { IUser } from '@/types';
+import { authOptions } from '@src/app/api/auth/[...nextauth]/route';
+import { usersApi, UserStats, UserTable } from '@src/features/users';
+import { IUser } from '@src/types';
 import { getServerSession } from 'next-auth';
 
 interface IManageUsersSearchParams {

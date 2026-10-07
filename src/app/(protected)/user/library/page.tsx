@@ -1,5 +1,5 @@
-import Container from '@/components/layouts/Container';
-import { LibraryClient } from '@/features/library';
+import Container from '@src/components/layouts/Container';
+import { LibraryClient } from '@src/features/library';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

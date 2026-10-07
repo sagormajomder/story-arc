@@ -1,1 +1,1 @@
-export * from '@/features/users/types/user.types';
+export * from '@src/features/users/types/user.types';

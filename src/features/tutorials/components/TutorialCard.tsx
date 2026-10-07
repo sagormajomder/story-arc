@@ -3,7 +3,7 @@
 import { Play } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ITutorial } from '@/types/tutorial';
+import { ITutorial } from '@src/types/tutorial';
 
 export interface ITutorialCardProps {
   tutorial: ITutorial;

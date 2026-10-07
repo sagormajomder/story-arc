@@ -7,9 +7,9 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
+import { Button } from '@src/components/ui/button';
 import DeleteBookModal from './DeleteBookModal';
-import { IBook } from '@/types/book';
+import { IBook } from '@src/types/book';
 
 export interface IBookTableProps {
   books: IBook[];
