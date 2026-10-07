@@ -9,7 +9,7 @@ import { FilterSidebar } from './FilterSidebar';
 import { SearchBar } from './SearchBar';
 import { SortSelect } from './SortSelect';
 import { useSession } from 'next-auth/react';
-import { IBook } from '@src/types/book';
+import type { IBook } from '../books.index';
 
 export interface IBrowseBooksClientProps {
   initialGenres: string[];

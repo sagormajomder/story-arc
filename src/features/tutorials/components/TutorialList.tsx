@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@src/components/ui/button';
-import { ITutorial } from '@src/types/tutorial';
+import type { ITutorial } from '../tutorials.index';
 import { format } from 'date-fns';
 import { Edit2, RefreshCw, Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';

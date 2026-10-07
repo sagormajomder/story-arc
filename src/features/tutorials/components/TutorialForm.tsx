@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@src/components/ui/button';
-import { ITutorial } from '@src/types/tutorial';
+import type { ITutorial } from '../tutorials.index';
 import { Upload, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';

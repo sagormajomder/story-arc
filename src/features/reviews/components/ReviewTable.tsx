@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
 import { Badge } from '@src/components/ui/badge';
 import { Button } from '@src/components/ui/button';
 import { Card } from '@src/components/ui/card';
-import { IReview } from '@src/types';
+import type { IReview } from '../reviews.index';
 import { Check, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

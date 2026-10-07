@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@src/components/ui/button';
 import { DeleteBookModal } from './DeleteBookModal';
-import { IBook } from '@src/types/book';
+import type { IBook } from '../books.index';
 
 export interface IBookTableProps {
   books: IBook[];

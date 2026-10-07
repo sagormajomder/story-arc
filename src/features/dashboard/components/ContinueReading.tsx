@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@src/components/ui/button';
-import { IBook } from '@src/types';
+import type { IBook } from '@src/features/books/books.index';
 import { Bookmark, Play, Share2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

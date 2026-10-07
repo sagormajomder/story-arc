@@ -2,7 +2,7 @@
 
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
-import { IGenre } from '@src/types/book';
+import type { IGenre } from '../genres.index';
 import { Edit2, Shapes, Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';

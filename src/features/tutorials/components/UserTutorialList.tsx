@@ -5,7 +5,7 @@ import {
   TutorialSkeleton,
 } from './TutorialCard';
 import { Button } from '@src/components/ui/button';
-import { ITutorial } from '@src/types/tutorial';
+import type { ITutorial } from '../tutorials.index';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';

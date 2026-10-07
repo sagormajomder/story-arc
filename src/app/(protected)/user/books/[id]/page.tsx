@@ -1,5 +1,4 @@
-import { BookInfo, BookReviewsSection, booksApi } from '@src/features/books/books.index';
-import { IBook } from '@src/types';
+import { BookInfo, BookReviewsSection, booksApi, type IBook } from '@src/features/books/books.index';
 
 interface IBookDetailsPageProps {
   params: Promise<{ id: string }>;

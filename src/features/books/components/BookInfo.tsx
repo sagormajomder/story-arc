@@ -1,6 +1,6 @@
 'use client';
 
-import type { IBook } from '@src/features/books/types/book.types';
+import type { IBook } from '../books.index';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';

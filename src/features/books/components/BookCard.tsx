@@ -3,7 +3,7 @@
 import { Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { IBook } from '@src/types/book';
+import type { IBook } from '../books.index';
 
 export interface IBookCardProps {
   book: IBook;

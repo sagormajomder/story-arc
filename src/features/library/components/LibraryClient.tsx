@@ -1,7 +1,8 @@
 'use client';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@src/components/ui/tabs';
-import { IBook, ILibraryItem } from '@src/types';
+import type { IBook } from '@src/features/books/books.index';
+import type { ILibraryItem } from '../library.index';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { BookCardLibrary } from './BookCardLibrary';

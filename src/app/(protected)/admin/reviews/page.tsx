@@ -1,8 +1,7 @@
 import { authOptions } from '@src/app/api/auth/[...nextauth]/route';
 import { Container } from '@src/components/layouts/Container';
 import { Badge } from '@src/components/ui/badge';
-import { ReviewFilters, ReviewTable, reviewsApi } from '@src/features/reviews/reviews.index';
-import { IReview } from '@src/types';
+import { ReviewFilters, ReviewTable, reviewsApi, type IReview } from '@src/features/reviews/reviews.index';
 import { getServerSession } from 'next-auth';
 
 interface IReviewModerationSearchParams {

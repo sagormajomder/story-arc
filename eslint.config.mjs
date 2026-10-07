@@ -12,12 +12,12 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 const dependencyMap = {
   auth: [],
   books: ['reviews'], // 'books' module embeds reviews (BookReviewsSection)
-  dashboard: [],
-  genres: [],
-  library: [],
+  dashboard: ['books', 'users'],
+  genres: ['books'],
+  library: ['books'],
   reviews: [],
   tutorials: [],
-  users: [],
+  users: ['books'],
 };
 
 const featureNames = Object.keys(dependencyMap);
@@ -119,14 +119,14 @@ const policies = [
     },
   },
 
-  // 5. Types layer can access feature type definitions (types/*.types.ts)
+  // 5. Types layer can access feature type definitions and entrypoints
   {
     from: { element: { type: 'types' } },
     allow: {
       to: {
         element: {
           type: featureNames,
-          fileInternalPath: 'types/*.types.ts',
+          fileInternalPath: '{types/*.types.ts,*.index.ts}',
         },
       },
     },

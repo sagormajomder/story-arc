@@ -1,6 +1,6 @@
 'use client';
 
-import { IBook } from '@src/types/book';
+import type { IBook } from '../books.index';
 import { BookCard } from './BookCard';
 
 export interface IBookGridProps {

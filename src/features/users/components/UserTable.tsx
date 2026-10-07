@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@src/components/ui/dropdown-menu';
-import { IUser } from '@src/types';
+import type { IUser } from '../users.index';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, MoreVertical, Shield } from 'lucide-react';
 import { useSession } from 'next-auth/react';

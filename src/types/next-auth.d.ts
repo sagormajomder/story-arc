@@ -1,6 +1,6 @@
 import { DefaultSession } from 'next-auth';
 import 'next-auth/jwt';
-import { IShelfItem } from './book';
+import type { IShelfItem } from '@src/features/books/books.index';
 
 export interface ISessionUser {
   id?: string;
@@ -34,9 +34,11 @@ declare module 'next-auth' {
     user: ISessionUser & DefaultSession['user'];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface User extends IAuthUser {}
 }
 
 declare module 'next-auth/jwt' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface JWT extends IJWTPayload {}
 }

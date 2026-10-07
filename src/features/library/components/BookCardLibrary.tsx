@@ -2,7 +2,7 @@
 
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
-import { ILibraryItem } from '@src/types';
+import type { ILibraryItem } from '../library.index';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
