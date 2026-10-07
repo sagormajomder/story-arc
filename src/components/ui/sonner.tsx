@@ -3,7 +3,7 @@
 import { useTheme } from 'next-themes';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
 
-export interface IToasterProps extends ToasterProps {}
+export type IToasterProps = ToasterProps;
 
 const Toaster = ({ ...props }: IToasterProps) => {
   const { theme = 'system' } = useTheme();

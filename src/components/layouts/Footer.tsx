@@ -1,9 +1,16 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { FiBook } from 'react-icons/fi';
 import Container from './Container';
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState<number | string>(2026);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className='border-t border-border bg-muted/30'>
