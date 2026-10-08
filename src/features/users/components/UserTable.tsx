@@ -11,7 +11,7 @@ import {
 import type { IUser } from '../users.index';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, MoreVertical, Shield } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import { toast } from 'sonner';

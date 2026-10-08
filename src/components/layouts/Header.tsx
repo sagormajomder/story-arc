@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Container } from './Container';
 import { Logo } from './header/Logo';
 import { MobileNav } from './header/MobileNav';
@@ -14,7 +15,9 @@ export function Header() {
           <Logo />
 
           {/* Desktop Navigation Links */}
-          <NavLinks className='hidden lg:flex items-center' />
+          <Suspense fallback={<div className='hidden lg:flex w-48' />}>
+            <NavLinks className='hidden lg:flex items-center' />
+          </Suspense>
 
           {/* Right Side Actions */}
           <div className='flex items-center gap-2'>
@@ -25,7 +28,9 @@ export function Header() {
             </div>
 
             {/* Mobile Menu */}
-            <MobileNav />
+            <Suspense fallback={null}>
+              <MobileNav />
+            </Suspense>
           </div>
         </nav>
       </Container>

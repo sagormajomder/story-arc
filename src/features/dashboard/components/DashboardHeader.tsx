@@ -3,7 +3,7 @@
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
 import { Star, X } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import { FC, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -25,7 +25,7 @@ export interface IDashboardHeaderProps {
 
 export const DashboardHeader: FC<IDashboardHeaderProps> = ({ goal, stats }) => {
   const { data: session } = useSession();
-  const userName = session?.user?.name || 'User';
+  const userName = session?.user?.fullName || 'User';
 
   const progress = goal ? goal.current : 0;
   const target = goal ? goal.target : 20;

@@ -3,7 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@src/components/ui/tabs';
 import type { IBook } from '@src/features/books/books.index';
 import type { ILibraryItem } from '../library.index';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import { useEffect, useState } from 'react';
 import { BookCardLibrary } from './BookCardLibrary';
 import { ShelfTab } from './ShelfTab';

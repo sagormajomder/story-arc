@@ -2,7 +2,7 @@
 
 import { BookForm, IBookFormValues } from './BookForm';
 import type { IGenre } from '../books.index';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';

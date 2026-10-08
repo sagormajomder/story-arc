@@ -1,7 +1,7 @@
 'use client';
 
 import type { IBook } from '../books.index';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'sonner';

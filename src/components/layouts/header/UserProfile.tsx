@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@src/components/ui/dropdown-menu';
 import { LogOut } from 'lucide-react';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from '@src/providers';
 import Link from 'next/link';
 
 export function UserProfile() {
@@ -35,7 +35,7 @@ export function UserProfile() {
         <button className='flex items-center gap-3 focus:outline-none group'>
           <div className='hidden sm:flex flex-col items-end'>
             <span className='text-sm font-semibold text-foreground group-hover:text-primary transition-colors'>
-              {user.name || 'User'}
+              {user.fullName || 'User'}
             </span>
             <span className='text-xs text-muted-foreground capitalize'>
               {user.role || 'User'}
@@ -44,10 +44,10 @@ export function UserProfile() {
           <Avatar size='lg' className='border border-border group-hover:border-primary transition-colors'>
             <AvatarImage
               src={user.profileImage || undefined}
-              alt={user.name || 'User'}
+              alt={user.fullName || 'User'}
             />
             <AvatarFallback className='bg-muted text-xs font-semibold'>
-              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              {user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
         </button>

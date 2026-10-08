@@ -1,28 +1,30 @@
-import { withAuth, type NextRequestWithAuth } from 'next-auth/middleware';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default withAuth(
-  function proxy(req: NextRequestWithAuth) {
-    const { pathname } = req.nextUrl;
-    const { token } = req.nextauth;
+export default function proxy(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  const refreshToken = req.cookies.get('refreshToken')?.value;
+  const userRole = req.cookies.get('userRole')?.value;
 
-    if (pathname.startsWith('/admin') && token?.role !== 'admin') {
+  if (pathname.startsWith('/admin')) {
+    if (!refreshToken) {
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (userRole !== 'admin') {
       return NextResponse.redirect(new URL('/forbidden', req.url));
     }
-
-    if (pathname.startsWith('/user') && token?.role !== 'user') {
-      if (token?.role !== 'user' && token?.role !== 'admin') {
-        if (token?.role !== 'user') {
-          return NextResponse.redirect(new URL('/forbidden', req.url));
-        }
-      }
-    }
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => !!token,
-    },
   }
-);
+
+  if (pathname.startsWith('/user')) {
+    if (!refreshToken) {
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  return NextResponse.next();
+}
 
 export const config = { matcher: ['/admin/:path*', '/user/:path*'] };

@@ -3,7 +3,7 @@
 import { Button } from '@src/components/ui/button';
 import type { ITutorial } from '../tutorials.index';
 import { Upload, X } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';

@@ -1,63 +1,24 @@
-import { authOptions } from '@src/app/api/auth/[...nextauth]/route';
-import { usersApi, UserStats, UserTable, type IUser } from '@src/features/users/users.index';
-import { getServerSession } from 'next-auth';
+import { ManageUsersClient } from '@src/features/users/users.index';
+import { Metadata } from 'next';
+import { Suspense } from 'react';
 
-interface IManageUsersSearchParams {
-  page?: string;
-}
+export const metadata: Metadata = {
+  title: 'Manage Users | Story Arc',
+  description: 'Manage roles and accounts for registered readers.',
+};
 
-interface IManageUsersPageProps {
-  searchParams: Promise<IManageUsersSearchParams>;
-}
-
-interface IUsersResponse {
-  users: IUser[];
-  stats: {
-    activeUsers: number;
-    adminRoles: number;
-  };
-  currentPage: number;
-  totalPages: number;
-  totalUsers: number;
-}
-
-async function getUsers(page: number = 1): Promise<IUsersResponse> {
-  const session = await getServerSession(authOptions);
-  return (await usersApi.getUsers(page, 10, session?.token)) as unknown as IUsersResponse;
-}
-
-export default async function ManageUsersPage({
-  searchParams,
-}: IManageUsersPageProps) {
-  const { page } = await searchParams;
-  const currentPage = page ? parseInt(page, 10) : 1;
-  const data = await getUsers(currentPage);
-
+export default function ManageUsersPage() {
   return (
-    <div className='p-8 max-w-7xl mx-auto space-y-8'>
-      {/* Header */}
-      <div>
-        <h1 className='text-3xl font-serif font-bold text-foreground'>
-          Manage Users
-        </h1>
-        <p className='text-muted-foreground mt-1'>
-          Manage roles for all registered readers.
-        </p>
-      </div>
-
-      {/* Stats Cards */}
-      <UserStats
-        activeUsers={data.stats?.activeUsers}
-        adminRoles={data.stats?.adminRoles}
-      />
-
-      {/* Users Table */}
-      <UserTable
-        users={data.users || []}
-        currentPage={data.currentPage || 1}
-        totalPages={data.totalPages || 1}
-        totalUsers={data.totalUsers || 0}
-      />
-    </div>
+    <Suspense
+      fallback={
+        <div className='p-8 max-w-7xl mx-auto'>
+          <div className='animate-pulse space-y-4'>
+            <div className='h-8 bg-muted rounded w-48' />
+            <div className='h-4 bg-muted rounded w-64' />
+          </div>
+        </div>
+      }>
+      <ManageUsersClient />
+    </Suspense>
   );
 }

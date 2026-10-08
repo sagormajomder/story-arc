@@ -1,12 +1,11 @@
-import { authOptions } from '@src/app/api/auth/[...nextauth]/route';
 import { Container } from '@src/components/layouts/Container';
 import { BrowseBooksClient } from '@src/features/books/books.index';
 import { genresApi, type IGenre } from '@src/features/genres/genres.index';
+import { Loader2 } from 'lucide-react';
 import { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
+import { Suspense } from 'react';
 
 async function getGenres(): Promise<string[]> {
-  const session = await getServerSession(authOptions);
   try {
     const data = await genresApi.getGenres(1000);
 
@@ -28,9 +27,12 @@ export const metadata: Metadata = {
   description: 'Explore our vast collection of books across various genres.',
 };
 
-export default async function BrowseBooksPage() {
+async function BooksContent() {
   const genres = await getGenres();
+  return <BrowseBooksClient initialGenres={genres} />;
+}
 
+export default function BrowseBooksPage() {
   return (
     <div className='py-8'>
       <Container>
@@ -42,7 +44,14 @@ export default async function BrowseBooksPage() {
             Discover your next favorite read from our curated collection.
           </p>
         </div>
-        <BrowseBooksClient initialGenres={genres} />
+        <Suspense
+          fallback={
+            <div className='flex justify-center py-16'>
+              <Loader2 className='w-8 h-8 animate-spin text-primary' />
+            </div>
+          }>
+          <BooksContent />
+        </Suspense>
       </Container>
     </div>
   );

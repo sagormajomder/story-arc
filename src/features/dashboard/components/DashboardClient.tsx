@@ -2,7 +2,7 @@
 
 import type { IBook } from '@src/features/books/books.index';
 import type { IUser } from '@src/features/users/users.index';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import { useEffect, useState } from 'react';
 import { ContinueReading, ICurrentBookItem } from './ContinueReading';
 import { DashboardHeader, IDashboardStats, IReadingGoal } from './DashboardHeader';

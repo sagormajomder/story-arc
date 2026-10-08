@@ -1,7 +1,9 @@
 import { booksApi, EditBookFormWrapper, type IBook, type IGenre } from '@src/features/books/books.index';
 import { genresApi } from '@src/features/genres/genres.index';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
 interface IEditBookPageProps {
   params: Promise<{ id: string }>;
@@ -27,7 +29,7 @@ async function getGenres(): Promise<IGenre[]> {
   }
 }
 
-export default async function EditBookPage({ params }: IEditBookPageProps) {
+async function EditBookContent({ params }: IEditBookPageProps) {
   const { id } = await params;
   const [book, genres] = await Promise.all([getBook(id), getGenres()]);
 
@@ -36,8 +38,7 @@ export default async function EditBookPage({ params }: IEditBookPageProps) {
   }
 
   return (
-    <div className='p-8 max-w-2xl mx-auto'>
-      {/* Header with Breadcrumb */}
+    <>
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8'>
         <div className='space-y-4'>
           <div className='flex items-center gap-2 text-sm text-muted-foreground'>
@@ -64,6 +65,21 @@ export default async function EditBookPage({ params }: IEditBookPageProps) {
       <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
         <EditBookFormWrapper book={book} genres={genres} />
       </div>
+    </>
+  );
+}
+
+export default function EditBookPage({ params }: IEditBookPageProps) {
+  return (
+    <div className='p-8 max-w-2xl mx-auto'>
+      <Suspense
+        fallback={
+          <div className='flex justify-center py-16'>
+            <Loader2 className='w-8 h-8 animate-spin text-primary' />
+          </div>
+        }>
+        <EditBookContent params={params} />
+      </Suspense>
     </div>
   );
 }

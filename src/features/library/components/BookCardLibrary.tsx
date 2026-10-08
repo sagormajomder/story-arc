@@ -3,7 +3,7 @@
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
 import type { ILibraryItem } from '../library.index';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useState } from 'react';

@@ -3,7 +3,7 @@
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
 import { Plus } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';

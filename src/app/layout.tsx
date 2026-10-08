@@ -1,6 +1,6 @@
-import { AuthProvider, ThemeProvider } from '@src/providers';
 import { Toaster } from '@src/components/ui/sonner';
 import { cn } from '@src/lib/utils';
+import { AuthProvider, ThemeProvider } from '@src/providers';
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';

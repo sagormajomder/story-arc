@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '@src/config/api.config';
+import { getMemoryToken, refreshAccessToken } from './auth-token';
 
 export class ApiClientError extends Error {
   constructor(
@@ -15,13 +16,14 @@ export interface RequestOptions extends Omit<RequestInit, 'body'> {
   body?: unknown;
   token?: string;
   params?: Record<string, string | number | boolean | undefined>;
+  _retry?: boolean;
 }
 
 async function request<T>(
   endpoint: string,
   options: RequestOptions = {}
 ): Promise<T> {
-  const { body, token, params, headers: customHeaders, ...restOptions } = options;
+  const { body, token, params, headers: customHeaders, _retry, ...restOptions } = options;
 
   let url = endpoint.startsWith('http')
     ? endpoint
@@ -48,8 +50,10 @@ async function request<T>(
     }
   }
 
-  if (token) {
-    headers.set('Authorization', `Bearer ${token}`);
+  // Use provided token, or fall back to in-memory accessToken
+  const effectiveToken = token || getMemoryToken();
+  if (effectiveToken && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${effectiveToken}`);
   }
 
   const config: RequestInit = {
@@ -63,6 +67,24 @@ async function request<T>(
   };
 
   const response = await fetch(url, config);
+
+  // Auto-refresh token on 401 Unauthorized
+  if (
+    response.status === 401 &&
+    !_retry &&
+    !url.includes('/auth/refresh') &&
+    !url.includes('/auth/login') &&
+    !url.includes('/auth/register')
+  ) {
+    const newToken = await refreshAccessToken();
+    if (newToken) {
+      return request<T>(endpoint, {
+        ...options,
+        token: newToken,
+        _retry: true,
+      });
+    }
+  }
 
   if (!response.ok) {
     let errorData: unknown;

@@ -1,7 +1,8 @@
 import { AddBookFormWrapper, type IGenre } from '@src/features/books/books.index';
 import { genresApi } from '@src/features/genres/genres.index';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 async function getGenres(): Promise<IGenre[]> {
   try {
@@ -13,9 +14,16 @@ async function getGenres(): Promise<IGenre[]> {
   }
 }
 
-export default async function AddBookPage() {
+async function AddBookContent() {
   const genres = await getGenres();
+  return (
+    <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
+      <AddBookFormWrapper genres={genres} />
+    </div>
+  );
+}
 
+export default function AddBookPage() {
   return (
     <div className='p-8 max-w-2xl mx-auto'>
       <Link
@@ -34,9 +42,14 @@ export default async function AddBookPage() {
         </p>
       </div>
 
-      <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
-        <AddBookFormWrapper genres={genres} />
-      </div>
+      <Suspense
+        fallback={
+          <div className='flex justify-center py-12'>
+            <Loader2 className='w-8 h-8 animate-spin text-primary' />
+          </div>
+        }>
+        <AddBookContent />
+      </Suspense>
     </div>
   );
 }

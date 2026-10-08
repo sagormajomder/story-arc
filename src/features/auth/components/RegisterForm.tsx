@@ -1,42 +1,39 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
 import { Label } from '@src/components/ui/label';
 import { Separator } from '@src/components/ui/separator';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Camera, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { signIn } from 'next-auth/react';
+import { useAuth } from '@src/providers';
+import {
+  Camera,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Loader2,
+  MailCheck,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
+import {
+  registerSchema,
+  type IRegisterFormValues,
+} from '../schemas/auth.schema';
 import { GoogleLogin } from './GoogleLogin';
-
-const registerSchema = z.object({
-  name: z.string().min(1, 'Full Name is required'),
-  email: z.string().min(1, 'Email is required').email('Invalid email address'),
-  password: z
-    .string()
-    .min(8, 'Must be at least 8 characters')
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
-      'Must have 1 uppercase, 1 lowercase, 1 number, and 1 symbol',
-    ),
-  profileImage: z.any().optional(),
-});
-
-export type IRegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const router = useRouter();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
+
+  const { register: registerUser } = useAuth();
 
   const {
     register,
@@ -46,7 +43,7 @@ export function RegisterForm() {
   } = useForm<IRegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: '',
+      fullName: '',
       email: '',
       password: '',
     },
@@ -89,7 +86,7 @@ export function RegisterForm() {
           {
             method: 'POST',
             body: formData,
-          },
+          }
         );
 
         const imageData = await res.json();
@@ -97,59 +94,85 @@ export function RegisterForm() {
         if (imageData.success) {
           imageUrl = imageData.data.url;
         } else {
-          console.error('Image upload failed:', imageData);
-          toast.error('Image upload failed');
+          console.warn('Image upload failed, falling back to placeholder');
         }
       }
 
-      const userInfo = {
-        name: data.name,
+      await registerUser({
+        fullName: data.fullName,
         email: data.email,
         password: data.password,
         profileImage: imageUrl,
-      };
+      });
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userInfo),
-        },
+      setRegisteredEmail(data.email);
+      setIsSuccess(true);
+      toast.success(
+        'Account created! Please check your email to verify your account.'
       );
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.message || 'Registration failed');
-      }
-
-      if (result.insertedId) {
-        toast.success('Registration successful! Logging you in...');
-
-        const loginResult = await signIn('credentials', {
-          email: data.email,
-          password: data.password,
-          redirect: false,
-        });
-
-        if (loginResult?.error) {
-          toast.error('Auto-login failed. Please login manually.');
-          router.push('/login');
-        } else {
-          router.push('/user/library');
-          router.refresh();
-        }
-      }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error during registration:', error);
-      toast.error(error.message || 'Something went wrong');
+      const msg = error instanceof Error ? error.message : 'Something went wrong during registration';
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isSuccess) {
+    return (
+      <div className='w-full lg:w-1/2 flex items-center justify-center p-8 bg-background overflow-y-auto'>
+        <div className='w-full max-w-md space-y-8 my-auto text-center'>
+          <div className='mx-auto w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-sm'>
+            <MailCheck className='w-8 h-8' />
+          </div>
+
+          <div className='space-y-3'>
+            <h2 className='text-3xl font-bold tracking-tight font-serif text-foreground'>
+              Verify Your Email
+            </h2>
+            <p className='text-muted-foreground text-sm leading-relaxed'>
+              We sent a verification link to{' '}
+              <span className='font-semibold text-foreground'>
+                {registeredEmail}
+              </span>
+              . Please check your inbox and click the link to activate your
+              account.
+            </p>
+          </div>
+
+          <div className='p-4 rounded-lg bg-muted/40 border border-border text-xs text-muted-foreground space-y-2 text-left'>
+            <div className='flex items-center gap-2 font-medium text-foreground'>
+              <CheckCircle2 className='w-4 h-4 text-emerald-600 dark:text-emerald-400' />
+              <span>Next Steps:</span>
+            </div>
+            <ol className='list-decimal list-inside space-y-1 pl-1'>
+              <li>Open your email inbox</li>
+              <li>Click the verification link</li>
+              <li>Sign in with your new credentials</li>
+            </ol>
+          </div>
+
+          <div className='space-y-3 pt-2'>
+            <Button asChild className='w-full h-11 text-base shadow-sm'>
+              <Link href='/login'>Go to Login</Link>
+            </Button>
+
+            <p className='text-sm text-muted-foreground'>
+              Didn&apos;t receive an email?{' '}
+              <Link
+                href={`/resend-verification?email=${encodeURIComponent(
+                  registeredEmail
+                )}`}
+                className='font-medium text-primary hover:underline transition-colors'>
+                Resend verification email
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='w-full lg:w-1/2 flex items-center justify-center p-8 bg-background overflow-y-auto'>
@@ -201,15 +224,17 @@ export function RegisterForm() {
 
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
           <div className='space-y-2'>
-            <Label htmlFor='name'>Full Name</Label>
+            <Label htmlFor='fullName'>Full Name</Label>
             <Input
-              id='name'
+              id='fullName'
               placeholder='John Doe'
               className='h-11 bg-card border-input/50 focus-visible:ring-primary/20'
-              {...register('name')}
+              {...register('fullName')}
             />
-            {errors.name && (
-              <p className='text-sm text-destructive'>{errors.name.message}</p>
+            {errors.fullName && (
+              <p className='text-sm text-destructive'>
+                {errors.fullName.message}
+              </p>
             )}
           </div>
 
@@ -236,7 +261,7 @@ export function RegisterForm() {
                 placeholder='Create a password'
                 className='h-11 bg-card border-input/50 focus-visible:ring-primary/20 pr-10'
                 {...register('password', {
-                  onChange: e => calculateStrength(e.target.value),
+                  onChange: (e) => calculateStrength(e.target.value),
                 })}
               />
               <button
@@ -253,7 +278,7 @@ export function RegisterForm() {
 
             {/* Password Strength Meter */}
             <div className='flex gap-2 h-1 mt-2'>
-              {[1, 2, 3, 4].map(level => (
+              {[1, 2, 3, 4].map((level) => (
                 <div
                   key={level}
                   className={`h-full w-full rounded-full transition-colors duration-300 ${

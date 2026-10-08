@@ -1,4 +1,6 @@
 import { tutorialsApi, UserTutorialList } from '@src/features/tutorials/tutorials.index';
+import { Loader2 } from 'lucide-react';
+import { Suspense } from 'react';
 
 interface ITutorialsPageProps {
   searchParams: Promise<{ page?: string }>;
@@ -13,11 +15,18 @@ async function getTutorials(page = 1) {
   }
 }
 
-export default async function TutorialsPage({ searchParams }: ITutorialsPageProps) {
+async function TutorialsContent({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { page } = await searchParams;
   const currentPage = page ? parseInt(page) : 1;
   const data = await getTutorials(currentPage);
+  return <UserTutorialList initialData={data} />;
+}
 
+export default function TutorialsPage({ searchParams }: ITutorialsPageProps) {
   return (
     <div className='p-8 max-w-7xl mx-auto space-y-12'>
       {/* Hero Section */}
@@ -31,7 +40,14 @@ export default async function TutorialsPage({ searchParams }: ITutorialsPageProp
         </p>
       </div>
 
-      <UserTutorialList initialData={data} />
+      <Suspense
+        fallback={
+          <div className='flex justify-center py-12'>
+            <Loader2 className='w-8 h-8 animate-spin text-primary' />
+          </div>
+        }>
+        <TutorialsContent searchParams={searchParams} />
+      </Suspense>
     </div>
   );
 }

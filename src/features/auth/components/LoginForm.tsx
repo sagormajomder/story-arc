@@ -1,31 +1,29 @@
 'use client';
 
-import { signIn, useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
-
-import { GoogleLogin } from './GoogleLogin';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
 import { Label } from '@src/components/ui/label';
 import { Separator } from '@src/components/ui/separator';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useAuth } from '@src/providers';
+import { AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-
-const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
-});
-
-export type ILoginFormValues = z.infer<typeof loginSchema>;
+import { toast } from 'sonner';
+import { loginSchema, type ILoginFormValues } from '../schemas/auth.schema';
+import { GoogleLogin } from './GoogleLogin';
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
+
+  const { login } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl');
 
   const {
     register,
@@ -40,60 +38,45 @@ export function LoginForm() {
     },
   });
 
-  const { data: session } = useSession();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
-
   const onSubmit = async (data: ILoginFormValues) => {
     setIsLoading(true);
+    setUnverifiedEmail(null);
 
     try {
-      const result = await signIn('credentials', {
+      await login({
         email: data.email,
         password: data.password,
-        redirect: false,
       });
 
-      if (result?.error) {
-        toast.error('Invalid email or password');
+      toast.success('Logged in successfully!');
+
+      if (callbackUrl && callbackUrl !== '/login') {
+        router.push(callbackUrl as any);
       } else {
-        toast.success('Logged in successfully!');
-
-        if (callbackUrl && callbackUrl !== '/login') {
-          router.push(callbackUrl as any);
-          router.refresh();
-          return;
-        }
-
-        const sessionRes = await fetch('/api/auth/session');
-        const sessionData = await sessionRes.json();
-
-        if (sessionData?.user?.role === 'admin') {
-          router.push('/admin/dashboard');
-        } else if (sessionData?.user?.role === 'user') {
-          router.push('/user/library');
-        } else {
-          router.push('/');
-        }
-        router.refresh();
+        router.push('/user/library');
       }
-    } catch (error) {
+      router.refresh();
+    } catch (error: unknown) {
       console.error(error);
-      toast.error('Something went wrong');
+      const msg =
+        error instanceof Error ? error.message : 'Invalid email or password';
+      if (msg.toLowerCase().includes('verify your email')) {
+        setUnverifiedEmail(data.email);
+      }
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
   };
 
   function handleDemoUser() {
-    setValue('email', 'ex@gmail.com');
-    setValue('password', 'UserNo01%');
+    setValue('email', 'user@storyarc.com');
+    setValue('password', 'UserNo01%%');
   }
 
   function handleDemoAdmin() {
-    setValue('email', 'admin@gmail.com');
-    setValue('password', 'AdminNo01%');
+    setValue('email', 'admin@storyarc.com');
+    setValue('password', 'AdminNo01%%');
   }
 
   return (
@@ -107,6 +90,25 @@ export function LoginForm() {
             Log in to track your reading progress and discover new favorites.
           </p>
         </div>
+
+        {unverifiedEmail && (
+          <div className='p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-sm flex flex-col gap-2'>
+            <div className='flex items-center gap-2 font-medium'>
+              <AlertCircle className='h-4 w-4' />
+              <span>Email Not Verified</span>
+            </div>
+            <p className='text-xs'>
+              Your account needs email verification before you can sign in.
+            </p>
+            <Link
+              href={`/resend-verification?email=${encodeURIComponent(
+                unverifiedEmail,
+              )}`}
+              className='text-xs font-semibold underline hover:opacity-80 transition-opacity'>
+              Click here to resend verification link &rarr;
+            </Link>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
           <div className='space-y-2'>

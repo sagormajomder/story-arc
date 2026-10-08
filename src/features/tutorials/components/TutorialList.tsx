@@ -4,7 +4,7 @@ import { Button } from '@src/components/ui/button';
 import type { ITutorial } from '../tutorials.index';
 import { format } from 'date-fns';
 import { Edit2, RefreshCw, Trash2 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

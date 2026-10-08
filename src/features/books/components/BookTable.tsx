@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight, Edit, Trash2 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';

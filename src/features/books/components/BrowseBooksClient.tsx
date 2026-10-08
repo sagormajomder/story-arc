@@ -8,7 +8,7 @@ import { BookGrid } from './BookGrid';
 import { FilterSidebar } from './FilterSidebar';
 import { SearchBar } from './SearchBar';
 import { SortSelect } from './SortSelect';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import type { IBook } from '../books.index';
 
 export interface IBrowseBooksClientProps {

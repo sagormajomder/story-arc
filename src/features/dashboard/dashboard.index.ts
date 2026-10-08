@@ -1,5 +1,6 @@
 export { DashboardHeader } from './components/DashboardHeader';
 export { DashboardClient } from './components/DashboardClient';
+export { AdminDashboardClient } from './components/AdminDashboardClient';
 export { ReadingStats } from './components/ReadingStats';
 export { RecommendationCarousel } from './components/RecommendationCarousel';
 export { ContinueReading } from './components/ContinueReading';

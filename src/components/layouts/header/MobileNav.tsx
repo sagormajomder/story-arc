@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
 import { Button } from '@src/components/ui/button';
 import { LogOut } from 'lucide-react';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from '@src/providers';
 import Link from 'next/link';
 import { useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
@@ -17,7 +17,7 @@ export function MobileNav() {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const userImage = session?.user?.profileImage || session?.user?.image;
+  const userImage = session?.user?.profileImage;
 
   return (
     <>
@@ -49,17 +49,17 @@ export function MobileNav() {
                         <Avatar size='lg' className='border border-border'>
                           <AvatarImage
                             src={userImage || undefined}
-                            alt={session.user.name || 'User'}
+                            alt={session.user.fullName || 'User'}
                           />
                           <AvatarFallback className='bg-muted text-xs font-semibold'>
-                            {session.user.name
-                              ? session.user.name.charAt(0).toUpperCase()
+                            {session.user.fullName
+                              ? session.user.fullName.charAt(0).toUpperCase()
                               : 'U'}
                           </AvatarFallback>
                         </Avatar>
                         <div className='flex flex-col'>
                           <span className='text-sm font-semibold text-foreground'>
-                            {session.user.name}
+                            {session.user.fullName}
                           </span>
                           <span className='text-xs text-muted-foreground capitalize'>
                             {session.user.role || 'User'}

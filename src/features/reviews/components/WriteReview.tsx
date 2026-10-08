@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@src/providers';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -56,8 +56,8 @@ export const WriteReview: FC<IWriteReviewProps> = ({ bookId, onReviewAdded }) =>
         body: JSON.stringify({
           bookId,
           userEmail: session.user.email,
-          userName: session.user.name,
-          userImage: session.user.image,
+          userName: session.user.fullName,
+          userImage: session.user.profileImage,
           rating: values.rating,
           comment: values.comment,
         }),

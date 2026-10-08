@@ -3,9 +3,15 @@ export const API_BASE_URL =
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: '/users/login',
-    REGISTER: '/users/register',
-    GOOGLE: '/users/google',
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
+    GOOGLE: '/auth/google',
+    REFRESH: '/auth/refresh',
+    LOGOUT: '/auth/logout',
+    VERIFY_EMAIL: '/auth/verify-email',
+    RESEND_VERIFICATION: '/auth/resend-verification',
+    FORGOT_PASSWORD: '/auth/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password',
   },
   BOOKS: {
     BASE: '/books',
