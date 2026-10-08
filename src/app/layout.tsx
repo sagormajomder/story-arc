@@ -7,10 +7,10 @@ import './globals.css';
 
 const playfairDisplayHeading = Playfair_Display({
   subsets: ['latin'],
-  variable: '--font-heading',
+  variable: '--font-playfair',
 });
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'Story Arc - Map your reading journey',

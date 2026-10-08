@@ -45,7 +45,7 @@ function CardTitle({ className, ...props }: ICardTitleProps) {
     <div
       data-slot='card-title'
       className={cn(
-        'cn-font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm',
+        'font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm',
         className
       )}
       {...props}

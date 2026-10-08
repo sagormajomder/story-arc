@@ -1,4 +1,5 @@
 import { AuthLeftSection, LoginForm } from '@src/features/auth/auth.index';
+import { Loader2 } from 'lucide-react';
 import { Suspense } from 'react';
 
 export default function LoginPage() {
@@ -10,8 +11,8 @@ export default function LoginPage() {
       />
       <Suspense
         fallback={
-          <div className='flex justify-center items-center w-full lg:w-1/2'>
-            Loading...
+          <div className='w-full lg:w-1/2 flex items-center justify-center p-8 bg-background'>
+            <Loader2 className='w-8 h-8 animate-spin text-primary' />
           </div>
         }>
         <LoginForm />
