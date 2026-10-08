@@ -3,13 +3,13 @@
 import { Button } from '@src/components/ui/button';
 import { signOut } from '@src/providers';
 import Link from 'next/link';
-import { FiAlertTriangle } from 'react-icons/fi';
+import { AlertTriangle } from 'lucide-react';
 
 export default function ForbiddenPage() {
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-background p-4 text-center'>
       <div className='mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-destructive/10 text-destructive animate-pulse'>
-        <FiAlertTriangle className='h-10 w-10' />
+        <AlertTriangle className='h-10 w-10' />
       </div>
       <h1 className='mb-2 text-4xl font-bold tracking-tight font-serif text-foreground'>
         Access Denied

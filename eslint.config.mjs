@@ -132,11 +132,11 @@ const policies = [
     },
   },
 
-  // 6. Components layer can access shared utilities, hooks, types, and other components
+  // 6. Components layer can access shared utilities, hooks, types, providers, and other components
   {
     from: { element: { type: 'components' } },
     allow: {
-      to: { element: { type: ['components', 'lib', 'hooks', 'types'] } },
+      to: { element: { type: ['components', 'providers', 'lib', 'hooks', 'types'] } },
     },
   },
 

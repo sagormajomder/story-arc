@@ -2,11 +2,10 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
 import { Button } from '@src/components/ui/button';
-import { LogOut } from 'lucide-react';
 import { signOut, useSession } from '@src/providers';
+import { LogOut, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import { FiMenu, FiX } from 'react-icons/fi';
 import { Container } from '../Container';
 import { NavLinks } from './NavLinks';
 import { ThemeToggle } from './ThemeToggle';
@@ -26,7 +25,7 @@ export function MobileNav() {
         className='lg:hidden text-2xl text-foreground p-1'
         onClick={toggleMenu}
         aria-label='Toggle menu'>
-        {isMenuOpen ? <FiX /> : <FiMenu />}
+        {isMenuOpen ? <X className='size-6' /> : <Menu className='size-6' />}
       </button>
 
       {/* Mobile Navigation Dropdown */}
@@ -69,6 +68,7 @@ export function MobileNav() {
                     ) : (
                       <Link
                         href='/login'
+                        onClick={() => setIsMenuOpen(false)}
                         className='text-sm font-semibold text-foreground hover:text-primary'>
                         Login
                       </Link>
@@ -82,7 +82,10 @@ export function MobileNav() {
                     variant='destructive'
                     size='sm'
                     className='w-full flex items-center justify-center gap-2'
-                    onClick={() => signOut()}>
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      signOut({ callbackUrl: '/login' });
+                    }}>
                     <LogOut size={16} />
                     Sign Out
                   </Button>

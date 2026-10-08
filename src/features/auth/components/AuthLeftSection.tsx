@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
-import { FiBook } from 'react-icons/fi';
+import { Book } from 'lucide-react';
 
 export interface IAuthLeftSectionProps {
   title: string;
@@ -29,7 +29,7 @@ export function AuthLeftSection({
 
       <div className='relative z-10 w-full max-w-lg px-12 text-white'>
         <div className='flex items-center gap-2 mb-8'>
-          <FiBook className='text-[2.5rem]' />
+          <Book className='size-10' />
           <h1 className='text-3xl font-bold tracking-tight'>Story Arc</h1>
         </div>
         <h2 className='text-5xl font-serif font-medium leading-tight mb-6'>

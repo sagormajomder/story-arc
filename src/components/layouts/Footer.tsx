@@ -1,17 +1,10 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
-import { FiBook } from 'react-icons/fi';
+import { GithubIcon, LinkedinIcon, TwitterIcon } from '@src/components/icons';
+import { Book } from 'lucide-react';
+import React from 'react';
 import { Container } from './Container';
+import { CurrentYear } from './CurrentYear';
 
 export function Footer() {
-  const [currentYear, setCurrentYear] = useState<number | string>(2026);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
-
   return (
     <footer className='border-t border-border bg-muted/30'>
       <Container>
@@ -19,7 +12,7 @@ export function Footer() {
           {/* Logo & Brand */}
           <div className='flex flex-col items-center md:items-start gap-2'>
             <div className='flex items-center gap-2 text-primary'>
-              <FiBook className='text-2xl' />
+              <Book className='size-6' />
               <span className='text-lg font-bold tracking-tight font-serif'>
                 Story Arc
               </span>
@@ -37,7 +30,7 @@ export function Footer() {
               rel='noopener noreferrer'
               className='text-muted-foreground hover:text-primary transition-colors'
               aria-label='Twitter'>
-              <FaTwitter size={20} />
+              <TwitterIcon size={20} />
             </a>
             <a
               href='https://github.com'
@@ -45,7 +38,7 @@ export function Footer() {
               rel='noopener noreferrer'
               className='text-muted-foreground hover:text-primary transition-colors'
               aria-label='GitHub'>
-              <FaGithub size={20} />
+              <GithubIcon size={20} />
             </a>
             <a
               href='https://linkedin.com'
@@ -53,14 +46,14 @@ export function Footer() {
               rel='noopener noreferrer'
               className='text-muted-foreground hover:text-primary transition-colors'
               aria-label='LinkedIn'>
-              <FaLinkedin size={20} />
+              <LinkedinIcon size={20} />
             </a>
           </div>
         </div>
 
         {/* Copyright */}
         <div className='border-t border-border py-6 text-center text-sm text-muted-foreground'>
-          <p>&copy; {currentYear} Story Arc. All rights reserved.</p>
+          <p>&copy; <CurrentYear /> Story Arc. All rights reserved.</p>
         </div>
       </Container>
     </footer>

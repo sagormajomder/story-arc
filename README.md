@@ -89,7 +89,6 @@ Please follow the below instructions to run this project in your machine:
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.0",
     "react-hot-toast": "^2.6.0",
-    "react-icons": "^5.5.0",
     "recharts": "^3.6.0",
     "tailwind-merge": "^3.4.0"
   }
