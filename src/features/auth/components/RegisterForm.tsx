@@ -327,7 +327,7 @@ export function RegisterForm() {
           </div>
         </div>
 
-        <GoogleLogin />
+        <GoogleLogin text='Sign up with Google' />
 
         <p className='text-center text-sm text-muted-foreground'>
           Already have an account?{' '}

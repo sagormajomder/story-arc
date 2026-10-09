@@ -22,11 +22,16 @@ export const authApi = {
     return result.data;
   },
 
-  googleLogin: async (idToken: string): Promise<IAuthResponse> => {
+  googleLogin: async (
+    token: string,
+    type: 'access' | 'id' = 'access'
+  ): Promise<IAuthResponse> => {
+    const payload =
+      type === 'access' ? { accessToken: token } : { idToken: token };
     const res = await fetch('/api/auth/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken }),
+      body: JSON.stringify(payload),
     });
     const result = await res.json();
     if (!res.ok) {

@@ -115,19 +115,22 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     }
   }, []);
 
-  const googleLogin = useCallback(async (idToken: string) => {
-    setStatus('loading');
-    try {
-      const res = await authApi.googleLogin(idToken);
-      setMemoryToken(res.accessToken);
-      setToken(res.accessToken);
-      setUser(res.user);
-      setStatus('authenticated');
-    } catch (error) {
-      setStatus('unauthenticated');
-      throw error;
-    }
-  }, []);
+  const googleLogin = useCallback(
+    async (token: string, type: 'access' | 'id' = 'access') => {
+      setStatus('loading');
+      try {
+        const res = await authApi.googleLogin(token, type);
+        setMemoryToken(res.accessToken);
+        setToken(res.accessToken);
+        setUser(res.user);
+        setStatus('authenticated');
+      } catch (error) {
+        setStatus('unauthenticated');
+        throw error;
+      }
+    },
+    []
+  );
 
   const register = useCallback(async (data: IRegisterPayload) => {
     const res = await authApi.register(data);
