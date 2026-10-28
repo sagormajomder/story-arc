@@ -18,7 +18,7 @@ export interface IUser {
 
 export interface IAuthResponse {
   user: IUser;
-  accessToken: string;
+  accessToken?: string;
 }
 
 export interface ISession {

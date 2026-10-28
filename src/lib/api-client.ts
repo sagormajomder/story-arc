@@ -1,11 +1,17 @@
-import { API_BASE_URL } from '@src/config/api.config';
+import { API_BASE_URL, API_ENDPOINTS } from '@src/config/api.config';
 import { getMemoryToken, refreshAccessToken } from './auth-token';
+
+export interface IErrorSource {
+  path: string;
+  message: string;
+}
 
 export class ApiClientError extends Error {
   constructor(
     public status: number,
     message: string,
-    public data?: unknown
+    public data?: unknown,
+    public errorSources?: IErrorSource[]
   ) {
     super(message);
     this.name = 'ApiClientError';
@@ -50,13 +56,19 @@ async function request<T>(
     }
   }
 
-  // Use provided token, or fall back to in-memory accessToken
+  // Required custom header for backend CSRF protection
+  if (!headers.has('X-Requested-With')) {
+    headers.set('X-Requested-With', 'XMLHttpRequest');
+  }
+
+  // Use provided token, or fall back to in-memory token if set
   const effectiveToken = token || getMemoryToken();
   if (effectiveToken && !headers.has('Authorization')) {
     headers.set('Authorization', `Bearer ${effectiveToken}`);
   }
 
   const config: RequestInit = {
+    credentials: 'include',
     ...restOptions,
     headers,
     body: body
@@ -72,15 +84,14 @@ async function request<T>(
   if (
     response.status === 401 &&
     !_retry &&
-    !url.includes('/auth/refresh') &&
-    !url.includes('/auth/login') &&
-    !url.includes('/auth/register')
+    !url.includes(API_ENDPOINTS.AUTH.REFRESH) &&
+    !url.includes(API_ENDPOINTS.AUTH.LOGIN) &&
+    !url.includes(API_ENDPOINTS.AUTH.REGISTER)
   ) {
-    const newToken = await refreshAccessToken();
-    if (newToken) {
+    const refreshOk = await refreshAccessToken();
+    if (refreshOk) {
       return request<T>(endpoint, {
         ...options,
-        token: newToken,
         _retry: true,
       });
     }
@@ -89,22 +100,24 @@ async function request<T>(
   if (!response.ok) {
     let errorData: unknown;
     let errorMessage = `HTTP error ${response.status}: ${response.statusText}`;
+    let errorSources: IErrorSource[] | undefined;
 
     try {
       errorData = await response.json();
-      if (
-        typeof errorData === 'object' &&
-        errorData !== null &&
-        'message' in errorData &&
-        typeof (errorData as { message: unknown }).message === 'string'
-      ) {
-        errorMessage = (errorData as { message: string }).message;
+      if (typeof errorData === 'object' && errorData !== null) {
+        const errorObj = errorData as Record<string, unknown>;
+        if (typeof errorObj.message === 'string') {
+          errorMessage = errorObj.message;
+        }
+        if (Array.isArray(errorObj.errorSources)) {
+          errorSources = errorObj.errorSources as IErrorSource[];
+        }
       }
     } catch {
       // response body was not JSON
     }
 
-    throw new ApiClientError(response.status, errorMessage, errorData);
+    throw new ApiClientError(response.status, errorMessage, errorData, errorSources);
   }
 
   // Handle 204 No Content

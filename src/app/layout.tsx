@@ -18,7 +18,11 @@ export const metadata: Metadata = {
     "Your reading history isn't just a list; it’s a narrative. The app visualizes your progress as an evolving 'arc' of genres, authors, and insights",
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang='en'

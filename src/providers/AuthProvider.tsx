@@ -105,8 +105,8 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     setStatus('loading');
     try {
       const res = await authApi.login(data);
-      setMemoryToken(res.accessToken);
-      setToken(res.accessToken);
+      setMemoryToken(res.accessToken ?? null);
+      setToken(res.accessToken ?? null);
       setUser(res.user);
       setStatus('authenticated');
     } catch (error) {
@@ -120,8 +120,8 @@ export function AuthProvider({ children }: IAuthProviderProps) {
       setStatus('loading');
       try {
         const res = await authApi.googleLogin(token, type);
-        setMemoryToken(res.accessToken);
-        setToken(res.accessToken);
+        setMemoryToken(res.accessToken ?? null);
+        setToken(res.accessToken ?? null);
         setUser(res.user);
         setStatus('authenticated');
       } catch (error) {
@@ -204,7 +204,7 @@ export function signOut({ callbackUrl }: { callbackUrl?: string } = {}) {
   broadcastLogout();
   setMemoryToken(null);
   if (typeof window !== 'undefined') {
-    fetch('/api/auth/logout', { method: 'POST' }).finally(() => {
+    authApi.logout().finally(() => {
       window.location.href = callbackUrl || '/login';
     });
   }

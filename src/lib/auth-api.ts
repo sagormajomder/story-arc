@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@src/config/api.config';
+import { apiClient } from './api-client';
 import {
   IAuthResponse,
   IForgotPasswordPayload,
@@ -5,21 +7,18 @@ import {
   IRegisterPayload,
   IResendVerificationPayload,
   IResetPasswordPayload,
+  IUser,
   IVerifyEmailPayload,
 } from '@src/types/auth.types';
 
 export const authApi = {
   login: async (data: ILoginPayload): Promise<IAuthResponse> => {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (!res.ok) {
-      throw new Error(result.message || 'Login failed');
-    }
-    return result.data;
+    const res = await apiClient.post<{
+      success: boolean;
+      message: string;
+      data: { user: IUser };
+    }>(API_ENDPOINTS.AUTH.LOGIN, data);
+    return res.data;
   },
 
   googleLogin: async (
@@ -28,95 +27,85 @@ export const authApi = {
   ): Promise<IAuthResponse> => {
     const payload =
       type === 'access' ? { accessToken: token } : { idToken: token };
-    const res = await fetch('/api/auth/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const result = await res.json();
-    if (!res.ok) {
-      throw new Error(result.message || 'Google login failed');
-    }
-    return result.data;
+    const res = await apiClient.post<{
+      success: boolean;
+      message: string;
+      data: { user: IUser };
+    }>(API_ENDPOINTS.AUTH.GOOGLE, payload);
+    return res.data;
   },
 
   register: async (data: IRegisterPayload): Promise<{ message: string }> => {
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (!res.ok) {
-      throw new Error(result.message || 'Registration failed');
-    }
-    return result;
+    const res = await apiClient.post<{
+      success: boolean;
+      message: string;
+      data: null;
+    }>(API_ENDPOINTS.AUTH.REGISTER, data);
+    return { message: res.message };
   },
 
   verifyEmail: async (
     data: IVerifyEmailPayload
   ): Promise<{ message: string }> => {
-    const res = await fetch('/api/auth/verify-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (!res.ok) {
-      throw new Error(result.message || 'Email verification failed');
-    }
-    return result;
+    const res = await apiClient.post<{
+      success: boolean;
+      message: string;
+      data: null;
+    }>(API_ENDPOINTS.AUTH.VERIFY_EMAIL, data);
+    return { message: res.message };
   },
 
   resendVerification: async (
     data: IResendVerificationPayload
   ): Promise<{ message: string }> => {
-    const res = await fetch('/api/auth/resend-verification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (!res.ok) {
-      throw new Error(result.message || 'Failed to resend verification email');
-    }
-    return result;
+    const res = await apiClient.post<{
+      success: boolean;
+      message: string;
+      data: null;
+    }>(API_ENDPOINTS.AUTH.RESEND_VERIFICATION, data);
+    return { message: res.message };
   },
 
   forgotPassword: async (
     data: IForgotPasswordPayload
   ): Promise<{ message: string }> => {
-    const res = await fetch('/api/auth/forgot-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (!res.ok) {
-      throw new Error(result.message || 'Failed to send password reset email');
-    }
-    return result;
+    const res = await apiClient.post<{
+      success: boolean;
+      message: string;
+      data: null;
+    }>(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, data);
+    return { message: res.message };
   },
 
   resetPassword: async (
     data: IResetPasswordPayload
   ): Promise<{ message: string }> => {
-    const res = await fetch('/api/auth/reset-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (!res.ok) {
-      throw new Error(result.message || 'Password reset failed');
-    }
-    return result;
+    const res = await apiClient.post<{
+      success: boolean;
+      message: string;
+      data: null;
+    }>(API_ENDPOINTS.AUTH.RESET_PASSWORD, data);
+    return { message: res.message };
   },
 
   logout: async (): Promise<void> => {
-    await fetch('/api/auth/logout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    });
+    try {
+      await apiClient.post<{
+        success: boolean;
+        message: string;
+        data: null;
+      }>(API_ENDPOINTS.AUTH.LOGOUT);
+    } catch {
+      // Ignore errors on logout to allow local session clearance
+    }
+  },
+
+  getMe: async (): Promise<IUser> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      message: string;
+      data: IUser;
+    }>(API_ENDPOINTS.USERS.ME);
+    return res.data;
   },
 };

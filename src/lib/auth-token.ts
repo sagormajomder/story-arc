@@ -1,3 +1,5 @@
+import { API_BASE_URL, API_ENDPOINTS } from '@src/config/api.config';
+
 let memoryAccessToken: string | null = null;
 let lastRefreshTimestamp = 0;
 let inFlightRefreshPromise: Promise<string | null> | null = null;
@@ -30,10 +32,9 @@ const authChannel =
 
 if (authChannel) {
   authChannel.onmessage = (event) => {
-    if (event.data?.type === 'TOKEN_REFRESHED' && typeof event.data.token === 'string') {
-      memoryAccessToken = event.data.token;
+    if (event.data?.type === 'TOKEN_REFRESHED') {
       lastRefreshTimestamp = Date.now();
-      notifyTokenChange(memoryAccessToken);
+      notifyTokenChange(memoryAccessToken || 'valid');
     } else if (event.data?.type === 'LOGOUT') {
       memoryAccessToken = null;
       lastRefreshTimestamp = 0;
@@ -59,17 +60,19 @@ export function broadcastLogout(): void {
   authChannel?.postMessage({ type: 'LOGOUT' });
 }
 
-export function broadcastTokenRefreshed(token: string): void {
-  setMemoryToken(token);
-  authChannel?.postMessage({ type: 'TOKEN_REFRESHED', token });
+export function broadcastTokenRefreshed(): void {
+  lastRefreshTimestamp = Date.now();
+  authChannel?.postMessage({ type: 'TOKEN_REFRESHED' });
 }
 
 async function executeRefreshCall(): Promise<string | null> {
   try {
-    const res = await fetch('/api/auth/refresh', {
+    const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.REFRESH}`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
       },
     });
 
@@ -78,13 +81,9 @@ async function executeRefreshCall(): Promise<string | null> {
       return null;
     }
 
-    const data = await res.json();
-    const token = data?.data?.accessToken || data?.accessToken || null;
-    if (token) {
-      setMemoryToken(token);
-      authChannel?.postMessage({ type: 'TOKEN_REFRESHED', token });
-    }
-    return token;
+    lastRefreshTimestamp = Date.now();
+    broadcastTokenRefreshed();
+    return 'valid';
   } catch (err) {
     console.error('Token refresh network error:', err);
     return null;
@@ -112,9 +111,9 @@ export async function refreshAccessToken(): Promise<string | null> {
       'story_arc_refresh_lock',
       async () => {
         const now = Date.now();
-        // If refreshed within last 5 seconds, reuse existing token
-        if (now - lastRefreshTimestamp < 5000 && memoryAccessToken) {
-          return memoryAccessToken;
+        // If refreshed within last 5 seconds, consider still fresh
+        if (now - lastRefreshTimestamp < 5000 && lastRefreshTimestamp > 0) {
+          return 'valid';
         }
 
         try {
