@@ -10,29 +10,66 @@ export interface IUsersResponse {
 }
 
 export const usersApi = {
-  getUsers: (page = 1, limit = 10, token?: string) =>
-    apiClient.get<IUsersResponse>(API_ENDPOINTS.USERS.BASE, {
-      params: { page, limit },
-      token,
-    }),
+  getUsers: async (
+    page = 1,
+    limit = 10,
+    search?: string,
+    role?: string
+  ): Promise<IUsersResponse> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      meta?: { page: number; limit: number; total: number; totalPages: number };
+      data?: IUser[];
+      users?: IUser[];
+    }>(API_ENDPOINTS.USERS.BASE, {
+      params: {
+        page,
+        limit,
+        ...(search ? { search } : {}),
+        ...(role && role !== 'all' ? { role } : {}),
+      },
+    });
 
-  updateRole: (userId: string, role: string, token?: string) =>
-    apiClient.patch(API_ENDPOINTS.USERS.ROLE(userId), { role }, { token }),
+    const users = Array.isArray(res.data) ? res.data : (res.users || []);
+    return {
+      users,
+      currentPage: res.meta?.page ?? page,
+      totalPages: res.meta?.totalPages ?? 1,
+      totalUsers: res.meta?.total ?? users.length,
+    };
+  },
 
-  deleteUser: (userId: string, token?: string) =>
-    apiClient.delete(API_ENDPOINTS.USERS.BY_ID(userId), { token }),
+  getUserById: async (userId: string): Promise<IUser> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      data: IUser;
+    }>(API_ENDPOINTS.USERS.BY_ID(userId));
+    return res.data;
+  },
 
-  getUserById: (userId: string, token?: string) =>
-    apiClient.get<{ user: IUser } | IUser>(API_ENDPOINTS.USERS.BY_ID(userId), {
-      token,
-    }),
+  updateRole: async (userId: string, role: string) => {
+    const res = await apiClient.patch<{
+      success: boolean;
+      message: string;
+      data: IUser;
+    }>(API_ENDPOINTS.USERS.ROLE(userId), { role });
+    return res.data;
+  },
 
-  getUserStats: (userId: string, token?: string) =>
-    apiClient.get(API_ENDPOINTS.USERS.STATS(userId), { token }),
+  getMe: async (): Promise<IUser> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      data: IUser;
+    }>(API_ENDPOINTS.USERS.ME);
+    return res.data;
+  },
 
-  getUserRecommendations: (userId: string, token?: string) =>
-    apiClient.get(API_ENDPOINTS.USERS.RECOMMENDATIONS(userId), { token }),
-
-  updateGoal: (userId: string, goal: number, token?: string) =>
-    apiClient.patch(API_ENDPOINTS.USERS.GOAL(userId), { goal }, { token }),
+  updateMe: async (data: { fullName?: string; profileImage?: string }) => {
+    const res = await apiClient.patch<{
+      success: boolean;
+      message: string;
+      data: IUser;
+    }>(API_ENDPOINTS.USERS.ME, data);
+    return res.data;
+  },
 };

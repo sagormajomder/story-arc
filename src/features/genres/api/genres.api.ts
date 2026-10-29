@@ -7,25 +7,43 @@ export interface IGenreWithCount extends IGenre {
 }
 
 export const genresApi = {
-  getGenres: (limit = 100) =>
-    apiClient.get<{ genres: IGenreWithCount[] }>(API_ENDPOINTS.GENRES.BASE, {
-      params: { limit },
-    }),
+  getGenres: async (
+    limit = 100,
+    page = 1
+  ): Promise<{ genres: IGenreWithCount[]; totalGenres: number }> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      meta?: { page: number; limit: number; total: number; totalPages: number };
+      data?: IGenreWithCount[];
+      genres?: IGenreWithCount[];
+    }>(API_ENDPOINTS.GENRES.BASE, {
+      params: { limit, page },
+    });
 
-  create: (name: string, token?: string) =>
-    apiClient.post<{ genre: IGenre }>(
-      API_ENDPOINTS.GENRES.BASE,
-      { name },
-      { token }
-    ),
+    const genres = Array.isArray(res.data) ? res.data : (res.genres || []);
+    return {
+      genres,
+      totalGenres: res.meta?.total ?? genres.length,
+    };
+  },
 
-  update: (id: string, name: string, token?: string) =>
-    apiClient.put<{ genre: IGenre }>(
-      API_ENDPOINTS.GENRES.BY_ID(id),
-      { name },
-      { token }
-    ),
+  create: async (name: string, description?: string) => {
+    const res = await apiClient.post<{
+      success: boolean;
+      data: IGenre;
+    }>(API_ENDPOINTS.GENRES.BASE, { name, description });
+    return res.data;
+  },
 
-  delete: (id: string, token?: string) =>
-    apiClient.delete(API_ENDPOINTS.GENRES.BY_ID(id), { token }),
+  update: async (id: string, name: string, description?: string) => {
+    const res = await apiClient.patch<{
+      success: boolean;
+      data: IGenre;
+    }>(API_ENDPOINTS.GENRES.BY_ID(id), { name, description });
+    return res.data;
+  },
+
+  delete: async (id: string) => {
+    return apiClient.delete(API_ENDPOINTS.GENRES.BY_ID(id));
+  },
 };

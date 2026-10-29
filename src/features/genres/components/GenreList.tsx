@@ -2,7 +2,7 @@
 
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
-import type { IGenre } from '../genres.index';
+import { genresApi, type IGenre } from '../genres.index';
 import { Edit2, Shapes, Trash2 } from 'lucide-react';
 import { useSession } from '@src/providers';
 import { useRouter } from 'next/navigation';
@@ -35,18 +35,7 @@ export function GenreList({ genres }: IGenreListProps) {
     if (!editingGenre || !newName.trim()) return;
     setIsUpdating(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/genres/${editingGenre._id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.token}`,
-          },
-          body: JSON.stringify({ name: newName.trim() }),
-        }
-      );
-      if (!res.ok) throw new Error('Failed to update');
+      await genresApi.update(editingGenre._id, newName.trim());
       toast.success('Genre updated');
       setEditingGenre(null);
       router.refresh();
@@ -61,16 +50,7 @@ export function GenreList({ genres }: IGenreListProps) {
     if (!deletingGenre) return;
     setIsDeleting(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/genres/${deletingGenre._id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${session?.token}`,
-          },
-        }
-      );
-      if (!res.ok) throw new Error('Failed to delete');
+      await genresApi.delete(deletingGenre._id);
       toast.success('Genre deleted');
       setDeletingGenre(null);
       router.refresh();

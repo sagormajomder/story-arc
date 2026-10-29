@@ -6,6 +6,7 @@ import { Input } from '@src/components/ui/input';
 import { Label } from '@src/components/ui/label';
 import { Separator } from '@src/components/ui/separator';
 import { useAuth } from '@src/providers';
+import { isAdminRole } from '@src/lib/utils';
 import { AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -43,18 +44,29 @@ export function LoginForm() {
     setUnverifiedEmail(null);
 
     try {
-      await login({
+      const loggedUser = await login({
         email: data.email,
         password: data.password,
       });
 
       toast.success('Logged in successfully!');
 
+      const isAdmin = isAdminRole(loggedUser?.role);
+      let targetUrl = isAdmin ? '/admin/dashboard' : '/user/library';
+
       if (callbackUrl && callbackUrl !== '/login') {
-        router.push(callbackUrl as any);
-      } else {
-        router.push('/user/library');
+        if (isAdmin) {
+          if (!callbackUrl.startsWith('/user')) {
+            targetUrl = callbackUrl;
+          }
+        } else {
+          if (!callbackUrl.startsWith('/admin')) {
+            targetUrl = callbackUrl;
+          }
+        }
       }
+
+      router.push(targetUrl as any);
       router.refresh();
     } catch (error: unknown) {
       console.error(error);
@@ -76,7 +88,7 @@ export function LoginForm() {
 
   function handleDemoAdmin() {
     setValue('email', 'admin@storyarc.com');
-    setValue('password', 'AdminNo01%%');
+    setValue('password', 'Admin@123456');
   }
 
   return (

@@ -10,7 +10,7 @@ export interface IBooksResponse {
 }
 
 export const booksApi = {
-  getBooks: (params?: IBookFilterParams) => {
+  getBooks: async (params?: IBookFilterParams): Promise<IBooksResponse> => {
     const queryParams: Record<string, string | number | undefined> = {};
     if (params?.search) queryParams.search = params.search;
     if (params?.genre && params.genre.length > 0)
@@ -21,30 +21,77 @@ export const booksApi = {
     if (params?.page) queryParams.page = params.page;
     if (params?.limit) queryParams.limit = params.limit;
 
-    return apiClient.get<IBooksResponse>(API_ENDPOINTS.BOOKS.BASE, {
+    const res = await apiClient.get<{
+      success: boolean;
+      meta?: { page: number; limit: number; total: number; totalPages: number };
+      data?: IBook[];
+      books?: IBook[];
+    }>(API_ENDPOINTS.BOOKS.BASE, {
       params: queryParams,
     });
+
+    const books = Array.isArray(res.data) ? res.data : (res.books || []);
+    const meta = res.meta;
+
+    return {
+      books,
+      total: meta?.total ?? books.length,
+      totalPages: meta?.totalPages ?? 1,
+      currentPage: meta?.page ?? (params?.page || 1),
+    };
   },
 
-  getBookById: (id: string) =>
-    apiClient.get<{ book: IBook } | IBook>(API_ENDPOINTS.BOOKS.BY_ID(id)),
+  getBookById: async (id: string): Promise<IBook> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      data?: IBook;
+      book?: IBook;
+    } | IBook>(API_ENDPOINTS.BOOKS.BY_ID(id));
 
-  getBooksByIds: (ids: string[]) =>
-    apiClient.get<{ books: IBook[] }>(
-      `${API_ENDPOINTS.BOOKS.BASE}?ids=${ids.join(',')}`
-    ),
+    if ('data' in res && res.data) return res.data;
+    if ('book' in res && (res as any).book) return (res as any).book;
+    return res as IBook;
+  },
 
-  createBook: (data: unknown, token?: string) =>
-    apiClient.post<{ book: IBook }>(API_ENDPOINTS.BOOKS.BASE, data, { token }),
+  getBooksByIds: async (ids: string[]): Promise<{ books: IBook[] }> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      data?: IBook[];
+      books?: IBook[];
+    }>(`${API_ENDPOINTS.BOOKS.BASE}?ids=${ids.join(',')}`);
 
-  updateBook: (id: string, data: unknown, token?: string) =>
-    apiClient.patch<{ book: IBook }>(API_ENDPOINTS.BOOKS.BY_ID(id), data, {
-      token,
-    }),
+    const books = Array.isArray(res.data) ? res.data : (res.books || []);
+    return { books };
+  },
 
-  deleteBook: (id: string, token?: string) =>
-    apiClient.delete(API_ENDPOINTS.BOOKS.BY_ID(id), { token }),
+  createBook: async (data: unknown) => {
+    const res = await apiClient.post<{
+      success: boolean;
+      data: IBook;
+    }>(API_ENDPOINTS.BOOKS.BASE, data);
+    return res.data;
+  },
 
-  getGenres: (token?: string) =>
-    apiClient.get<{ genres: string[] }>(API_ENDPOINTS.BOOKS.GENRES, { token }),
+  updateBook: async (id: string, data: unknown) => {
+    const res = await apiClient.patch<{
+      success: boolean;
+      data: IBook;
+    }>(API_ENDPOINTS.BOOKS.BY_ID(id), data);
+    return res.data;
+  },
+
+  deleteBook: async (id: string) => {
+    return apiClient.delete(API_ENDPOINTS.BOOKS.BY_ID(id));
+  },
+
+  getGenres: async (): Promise<{ genres: string[] }> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      data?: string[];
+      genres?: string[];
+    }>(API_ENDPOINTS.BOOKS.GENRES);
+
+    const genres = Array.isArray(res.data) ? res.data : (res.genres || []);
+    return { genres };
+  },
 };

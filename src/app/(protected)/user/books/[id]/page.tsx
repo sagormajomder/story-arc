@@ -6,9 +6,7 @@ interface IBookDetailsPageProps {
 
 const fetchBook = async (id: string): Promise<IBook | null> => {
   try {
-    const res = await booksApi.getBookById(id);
-    if ('book' in res) return res.book;
-    return res as IBook;
+    return await booksApi.getBookById(id);
   } catch (error) {
     console.error('Failed to fetch book:', error);
     return null;

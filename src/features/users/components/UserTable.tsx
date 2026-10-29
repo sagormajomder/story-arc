@@ -8,10 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@src/components/ui/dropdown-menu';
-import type { IUser } from '../users.index';
+import { usersApi, type IUser } from '../users.index';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, MoreVertical, Shield } from 'lucide-react';
 import { useSession } from '@src/providers';
+import { isAdminRole } from '@src/lib/utils';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import { toast } from 'sonner';
@@ -43,19 +44,7 @@ export const UserTable: FC<IUserTableProps> = ({
   const handleRoleUpdate = async (userId: string, newRole: string) => {
     setUpdatingId(userId);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/role`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.token}`,
-          },
-          body: JSON.stringify({ role: newRole }),
-        },
-      );
-
-      if (!response.ok) throw new Error('Failed to update role');
+      await usersApi.updateRole(userId, newRole);
 
       toast.success(`User role updated to ${newRole}`);
       router.refresh();
@@ -140,14 +129,14 @@ export const UserTable: FC<IUserTableProps> = ({
                 <td className='py-4 px-6'>
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
-                      user.role === 'admin'
+                      isAdminRole(user.role)
                         ? 'bg-green-500/10 text-green-500 border-green-500/20'
                         : 'bg-secondary text-muted-foreground border-border'
                     }`}>
-                    {user.role === 'admin' && (
+                    {isAdminRole(user.role) && (
                       <Shield className='w-3 h-3 mr-1' />
                     )}
-                    {user.role === 'admin' ? 'ADMIN' : 'USER'}
+                    {isAdminRole(user.role) ? (user.role?.toUpperCase() || 'ADMIN') : 'USER'}
                   </span>
                 </td>
                 <td className='py-4 px-6'>
@@ -174,10 +163,10 @@ export const UserTable: FC<IUserTableProps> = ({
                         onClick={() =>
                           handleRoleUpdate(
                             user._id,
-                            user.role === 'admin' ? 'user' : 'admin',
+                            isAdminRole(user.role) ? 'user' : 'admin',
                           )
                         }>
-                        {user.role === 'admin'
+                        {isAdminRole(user.role)
                           ? 'Remove Admin Role'
                           : 'Make Admin'}
                       </DropdownMenuItem>

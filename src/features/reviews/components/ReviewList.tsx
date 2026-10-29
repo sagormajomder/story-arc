@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
-import type { IReview } from '../reviews.index';
+import { reviewsApi, type IReview } from '../reviews.index';
 import { formatDistanceToNow } from 'date-fns';
 import { FC, useEffect, useState } from 'react';
 
@@ -16,12 +16,8 @@ export const ReviewList: FC<IReviewListProps> = ({ bookId }) => {
 
   const fetchReviews = async () => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/reviews/${bookId}`
-      );
-      if (!res.ok) throw new Error('Failed to fetch reviews');
-      const data = await res.json();
-      setReviews(Array.isArray(data) ? data : []);
+      const data = await reviewsApi.getByBookId(bookId);
+      setReviews(data);
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch reviews', error);

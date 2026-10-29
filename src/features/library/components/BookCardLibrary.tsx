@@ -3,6 +3,7 @@
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
 import type { ILibraryItem } from '../library.index';
+import { libraryApi } from '../api/library.api';
 import { useSession } from '@src/providers';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -38,31 +39,19 @@ export const BookCardLibrary: FC<IBookCardLibraryProps> = ({ item, onUpdate }) =
   );
 
   const handleUpdateProgress = async (newStatus = item.status) => {
-    const userId = session?.user?.id || session?.user?._id;
-    if (!userId) {
+    if (!session?.user) {
       toast.error('Session invalid');
       return;
     }
 
     setLoading(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/shelf/${book._id}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.token}`,
-          },
-          body: JSON.stringify({
-            progress: currentProgress,
-            totalPages,
-            status: newStatus,
-          }),
-        }
-      );
-
-      if (!res.ok) throw new Error('Failed to update progress');
+      const bookId = book._id || item.bookId;
+      await libraryApi.updateShelfProgress(bookId, {
+        progress: currentProgress,
+        totalPages,
+        status: newStatus,
+      });
 
       toast.success('Progress updated');
       setIsUpdating(false);

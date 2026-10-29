@@ -10,7 +10,7 @@ export interface IUser {
   fullName: string;
   email: string;
   profileImage: string;
-  role?: 'user' | 'admin' | string;
+  role?: 'user' | 'admin' | 'super_admin' | 'superadmin' | string;
   shelf?: IShelfItem[];
   createdAt?: string;
   updatedAt?: string;
@@ -63,9 +63,9 @@ export interface IAuthContext {
   status: AuthStatus;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (data: ILoginPayload) => Promise<void>;
+  login: (data: ILoginPayload) => Promise<IUser>;
   register: (data: IRegisterPayload) => Promise<{ success: boolean; message: string }>;
-  googleLogin: (token: string, type?: 'access' | 'id') => Promise<void>;
+  googleLogin: (token: string, type?: 'access' | 'id') => Promise<IUser>;
   logout: () => Promise<void>;
   refresh: () => Promise<string | null>;
 }

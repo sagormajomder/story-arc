@@ -3,25 +3,58 @@ import { apiClient } from '@src/lib/api-client';
 import { ITutorial, ITutorialsResponse } from '../types/tutorial.types';
 
 export const tutorialsApi = {
-  getTutorials: (page = 1, limit = 10) =>
-    apiClient.get<ITutorialsResponse>(API_ENDPOINTS.TUTORIALS.BASE, {
-      params: { page, limit },
-    }),
+  getTutorials: async (
+    page = 1,
+    limit = 10,
+    category?: string
+  ): Promise<ITutorialsResponse> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      meta?: { page: number; limit: number; total: number; totalPages: number };
+      data?: ITutorial[];
+      tutorials?: ITutorial[];
+    }>(API_ENDPOINTS.TUTORIALS.BASE, {
+      params: {
+        page,
+        limit,
+        ...(category && category !== 'All' ? { category } : {}),
+      },
+    });
 
-  create: (data: unknown, token?: string) =>
-    apiClient.post<{ tutorial: ITutorial }>(
-      API_ENDPOINTS.TUTORIALS.BASE,
-      data,
-      { token }
-    ),
+    const tutorials = Array.isArray(res.data) ? res.data : (res.tutorials || []);
+    return {
+      tutorials,
+      currentPage: res.meta?.page ?? page,
+      totalPages: res.meta?.totalPages ?? 1,
+      totalTutorials: res.meta?.total ?? tutorials.length,
+    };
+  },
 
-  update: (id: string, data: unknown, token?: string) =>
-    apiClient.put<{ tutorial: ITutorial }>(
-      API_ENDPOINTS.TUTORIALS.BY_ID(id),
-      data,
-      { token }
-    ),
+  getTutorialById: async (id: string): Promise<ITutorial> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      data: ITutorial;
+    }>(API_ENDPOINTS.TUTORIALS.BY_ID(id));
+    return res.data;
+  },
 
-  delete: (id: string, token?: string) =>
-    apiClient.delete(API_ENDPOINTS.TUTORIALS.BY_ID(id), { token }),
+  create: async (data: unknown) => {
+    const res = await apiClient.post<{
+      success: boolean;
+      data: ITutorial;
+    }>(API_ENDPOINTS.TUTORIALS.BASE, data);
+    return res.data;
+  },
+
+  update: async (id: string, data: unknown) => {
+    const res = await apiClient.patch<{
+      success: boolean;
+      data: ITutorial;
+    }>(API_ENDPOINTS.TUTORIALS.BY_ID(id), data);
+    return res.data;
+  },
+
+  delete: async (id: string) => {
+    return apiClient.delete(API_ENDPOINTS.TUTORIALS.BY_ID(id));
+  },
 };

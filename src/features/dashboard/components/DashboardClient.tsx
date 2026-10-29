@@ -1,7 +1,7 @@
 'use client';
 
 import type { IBook } from '@src/features/books/books.index';
-import type { IUser } from '@src/features/users/users.index';
+import { libraryApi } from '@src/features/library/library.index';
 import { useSession } from '@src/providers';
 import { useEffect, useState } from 'react';
 import { ContinueReading, ICurrentBookItem } from './ContinueReading';
@@ -23,68 +23,47 @@ export function DashboardClient() {
 
   useEffect(() => {
     async function fetchData() {
-      const userId = session?.user?.id || session?.user?._id;
-      if (!userId) return;
+      if (!session?.user) return;
       setLoading(true);
 
       try {
-        const token = session.token;
-        const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
-
-        // 1. Fetch Stats & Goals
-        const statsRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/stats`,
-          { headers }
-        );
-        if (statsRes.ok) {
-          const data = await statsRes.json();
-          setStatsData(data);
-        }
-
-        // 2. Fetch User Shelf to find "Currently Reading"
-        const userRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
-          { headers }
-        );
-        if (userRes.ok) {
-          const userData: IUser = await userRes.json();
-          const shelf = userData.shelf || [];
-
-          // Find first "Currently Reading" or most recently updated
-          const activeItem = shelf.find(
-            item => item.status === 'Currently Reading' || item.status === 'reading'
-          );
-
-          if (activeItem) {
-            const bookId = typeof activeItem.bookId === 'string' ? activeItem.bookId : activeItem.bookId?._id;
-            if (bookId) {
-              const bookRes = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/books/${bookId}`,
-                { headers }
-              );
-              if (bookRes.ok) {
-                const book: IBook = await bookRes.json();
-                setCurrentBook({
-                  book,
-                  progress: 0,
-                  status: activeItem.status,
-                });
+        // 1. Fetch Reading Stats & Goal from /shelf/stats
+        const stats = await libraryApi.getStats();
+        setStatsData({
+          stats: {
+            totalPagesRead: stats.totalPagesRead,
+            streak: stats.currentStreak,
+          },
+          goal: stats.readingGoal
+            ? {
+                current: stats.readingGoal.booksRead,
+                target: stats.readingGoal.targetBooks,
               }
-            }
-          }
+            : undefined,
+        });
+
+        // 2. Fetch User Shelf to find "Currently Reading" book
+        const shelfRes = await libraryApi.getMyShelf({
+          status: 'Currently Reading',
+          limit: 1,
+        });
+
+        if (shelfRes.items && shelfRes.items.length > 0) {
+          const activeItem = shelfRes.items[0];
+          setCurrentBook({
+            book: activeItem.book,
+            progress: activeItem.progress || 0,
+            status: activeItem.status,
+          });
+        } else {
+          setCurrentBook(null);
         }
 
         // 3. Fetch Recommendations
-        const recRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/recommendations`,
-          { headers }
-        );
-        if (recRes.ok) {
-          const data = await recRes.json();
-          setRecommendations(Array.isArray(data) ? data : []);
-        }
+        const recData = await libraryApi.getRecommendations();
+        setRecommendations(recData);
       } catch (error) {
-        console.error('Dashboard fetch error', error);
+        console.error('Dashboard fetch error:', error);
       } finally {
         setLoading(false);
       }

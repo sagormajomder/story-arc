@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@src/components/ui/button';
 import { DeleteBookModal } from './DeleteBookModal';
-import type { IBook } from '../books.index';
+import { booksApi, type IBook } from '../books.index';
 
 export interface IBookTableProps {
   books: IBook[];
@@ -40,16 +40,7 @@ export function BookTable({ books, currentPage, totalPages }: IBookTableProps) {
     if (!selectedBook) return;
     setIsDeleting(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/books/${selectedBook._id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${session?.token}`,
-          },
-        }
-      );
-      if (!res.ok) throw new Error('Failed to delete book');
+      await booksApi.deleteBook(selectedBook._id);
 
       toast.success('Book deleted successfully');
       router.refresh();

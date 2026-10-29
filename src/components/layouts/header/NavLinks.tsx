@@ -1,6 +1,7 @@
 'use client';
 
 import { useSession } from '@src/providers';
+import { isAdminRole } from '@src/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { Route } from 'next';
@@ -22,7 +23,7 @@ export function NavLinks({ className = '', onLinkClick }: INavLinksProps) {
 
   let links: INavLinkItem[] = [];
 
-  if (role === 'admin') {
+  if (isAdminRole(role)) {
     links = [
       { name: 'Dashboard', href: '/admin/dashboard' },
       { name: 'Manage Books', href: '/admin/manage-books' },
@@ -31,7 +32,7 @@ export function NavLinks({ className = '', onLinkClick }: INavLinksProps) {
       { name: 'Manage Tutorials', href: '/admin/manage-tutorials' },
       { name: 'Manage Users', href: '/admin/manage-users' },
     ];
-  } else if (role === 'user') {
+  } else if (role === 'user' || Boolean(role)) {
     links = [
       { name: 'Dashboard', href: '/user/dashboard' },
       { name: 'My Library', href: '/user/library' },

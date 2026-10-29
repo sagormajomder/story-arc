@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isAdminRole } from '@src/lib/utils';
 
 export default function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -7,6 +8,7 @@ export default function proxy(req: NextRequest) {
     Boolean(req.cookies.get('authUser')?.value) ||
     Boolean(req.cookies.get('refreshToken')?.value);
   const userRole = req.cookies.get('userRole')?.value;
+  const isAdmin = isAdminRole(userRole);
 
   // 1. Admin Routes: require logged-in and admin role
   if (pathname.startsWith('/admin')) {
@@ -15,7 +17,7 @@ export default function proxy(req: NextRequest) {
       loginUrl.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    if (userRole !== 'admin') {
+    if (!isAdmin) {
       return NextResponse.redirect(new URL('/forbidden', req.url));
     }
   }
@@ -32,8 +34,7 @@ export default function proxy(req: NextRequest) {
   // 3. Guest/Auth Routes: if already logged in, redirect to appropriate area
   if (pathname === '/login' || pathname === '/register') {
     if (isLoggedIn) {
-      const targetUrl =
-        userRole === 'admin' ? '/admin/dashboard' : '/user/library';
+      const targetUrl = isAdmin ? '/admin/dashboard' : '/user/library';
       return NextResponse.redirect(new URL(targetUrl, req.url));
     }
   }

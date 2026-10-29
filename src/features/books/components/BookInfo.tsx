@@ -1,6 +1,7 @@
 'use client';
 
 import type { IBook } from '../books.index';
+import { libraryApi } from '@src/features/library/library.index';
 import { useSession } from '@src/providers';
 import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
@@ -29,28 +30,10 @@ export const BookInfo: FC<IBookInfoProps> = ({ book }) => {
 
     const checkShelfStatus = async () => {
       if (!session?.user) return;
-
-      const userId = session.user._id || session.user.id;
-      if (!userId) return;
-
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${session?.token}`,
-            },
-          }
-        );
-        if (res.ok) {
-          const userData = await res.json();
-          if (userData.shelf && Array.isArray(userData.shelf)) {
-            const found = userData.shelf.some(
-              (item: { bookId?: string | { _id?: string } }) =>
-                (typeof item.bookId === 'string' ? item.bookId : item.bookId?._id) === book._id
-            );
-            if (found) setIsInShelf(true);
-          }
+        const res = await libraryApi.checkBookInShelf(book._id);
+        if (res?.isInShelf) {
+          setIsInShelf(true);
         }
       } catch (error) {
         console.error('Failed to check shelf status', error);
@@ -69,37 +52,12 @@ export const BookInfo: FC<IBookInfoProps> = ({ book }) => {
     }
     setLoading(true);
     try {
-      const userId = session.user._id || session.user.id;
-
-      if (!userId) {
-        toast.error('User information missing');
-        return;
-      }
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/shelf`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.token}`,
-          },
-          body: JSON.stringify({
-            bookId: book._id,
-            title: book.title,
-            cover: book.cover,
-          }),
-        }
-      );
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'Failed to add to shelf');
-      }
-
-      const data = await res.json();
+      await libraryApi.addToShelf({
+        bookId: book._id,
+        status: 'Want to Read',
+      });
       setIsInShelf(true);
-      toast.success(data.message || 'Added to shelf');
+      toast.success('Added to shelf');
     } catch (error: unknown) {
       console.error(error);
       const msg = error instanceof Error ? error.message : 'Failed to add to shelf';

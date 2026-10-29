@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { reviewsApi } from '../reviews.index';
 import { useSession } from '@src/providers';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -47,26 +48,11 @@ export const WriteReview: FC<IWriteReviewProps> = ({ bookId, onReviewAdded }) =>
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.token}`,
-        },
-        body: JSON.stringify({
-          bookId,
-          userEmail: session.user.email,
-          userName: session.user.fullName,
-          userImage: session.user.profileImage,
-          rating: values.rating,
-          comment: values.comment,
-        }),
+      await reviewsApi.create({
+        bookId,
+        rating: values.rating,
+        comment: values.comment,
       });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'Failed to submit review');
-      }
 
       toast.success(
         'Review submitted successfully. Please wait for admin approval'

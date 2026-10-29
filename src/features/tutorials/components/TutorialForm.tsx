@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@src/components/ui/button';
-import type { ITutorial } from '../tutorials.index';
+import { tutorialsApi, type ITutorial } from '../tutorials.index';
 import { Upload, X } from 'lucide-react';
 import { useSession } from '@src/providers';
 import { useRouter } from 'next/navigation';
@@ -86,25 +86,11 @@ export function TutorialForm({
     setIsSubmitting(true);
     try {
       const isEditing = !!editingTutorial;
-      const url = isEditing
-        ? `${process.env.NEXT_PUBLIC_API_URL}/tutorials/${editingTutorial._id}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/tutorials`;
-
-      const method = isEditing ? 'PUT' : 'POST';
-
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.token}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok)
-        throw new Error(
-          `Failed to ${isEditing ? 'update' : 'create'} tutorial`
-        );
+      if (isEditing) {
+        await tutorialsApi.update(editingTutorial._id, data);
+      } else {
+        await tutorialsApi.create(data);
+      }
 
       toast.success(
         `Tutorial ${isEditing ? 'updated' : 'published'} successfully!`

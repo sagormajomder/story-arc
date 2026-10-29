@@ -11,9 +11,7 @@ interface IEditBookPageProps {
 
 async function getBook(id: string): Promise<IBook | undefined> {
   try {
-    const res = await booksApi.getBookById(id);
-    if ('book' in res) return res.book;
-    return res as IBook;
+    return await booksApi.getBookById(id);
   } catch {
     return undefined;
   }

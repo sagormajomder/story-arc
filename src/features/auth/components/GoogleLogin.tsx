@@ -3,6 +3,7 @@
 import { Button } from '@src/components/ui/button';
 import { GoogleIcon } from '@src/components/icons';
 import { useAuth } from '@src/providers';
+import { isAdminRole } from '@src/lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
@@ -30,14 +31,25 @@ export function GoogleLogin({
     async (accessToken: string) => {
       setIsSubmitting(true);
       try {
-        await googleLogin(accessToken, 'access');
+        const loggedUser = await googleLogin(accessToken, 'access');
         toast.success('Logged in successfully with Google!');
 
+        const isAdmin = isAdminRole(loggedUser?.role);
+        let targetUrl = isAdmin ? '/admin/dashboard' : '/user/library';
+
         if (callbackUrl && callbackUrl !== '/login') {
-          router.push(callbackUrl as Parameters<typeof router.push>[0]);
-        } else {
-          router.push('/user/library');
+          if (isAdmin) {
+            if (!callbackUrl.startsWith('/user')) {
+              targetUrl = callbackUrl;
+            }
+          } else {
+            if (!callbackUrl.startsWith('/admin')) {
+              targetUrl = callbackUrl;
+            }
+          }
         }
+
+        router.push(targetUrl as Parameters<typeof router.push>[0]);
         router.refresh();
       } catch (err: unknown) {
         console.error('Google Sign-in error:', err);

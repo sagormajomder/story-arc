@@ -9,7 +9,7 @@ import { FilterSidebar } from './FilterSidebar';
 import { SearchBar } from './SearchBar';
 import { SortSelect } from './SortSelect';
 import { useSession } from '@src/providers';
-import type { IBook } from '../books.index';
+import { booksApi, type IBook } from '../books.index';
 
 export interface IBrowseBooksClientProps {
   initialGenres: string[];
@@ -55,26 +55,25 @@ export function BrowseBooksClient({ initialGenres }: IBrowseBooksClientProps) {
       // Update URL silently
       router.push(`?${params.toString()}` as any, { scroll: false });
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/books?${params.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session?.token}`,
-          },
-        }
-      );
-      if (!res.ok) throw new Error('Failed to fetch books');
-      const data = await res.json();
+      const data = await booksApi.getBooks({
+        search: search || undefined,
+        genre: selectedGenres.length > 0 ? selectedGenres : undefined,
+        minRating: ratingRange[0] > 0 ? ratingRange[0] : undefined,
+        maxRating: ratingRange[1] < 5 ? ratingRange[1] : undefined,
+        sort: sort || undefined,
+        page,
+        limit: 12,
+      });
 
       setBooks(data.books || []);
-      setTotalBooks(data.totalBooks || 0);
+      setTotalBooks(data.total || 0);
       setTotalPages(data.totalPages || 0);
     } catch (error) {
-      console.error(error);
+      console.error('Failed to fetch books:', error);
     } finally {
       setLoading(false);
     }
-  }, [search, selectedGenres, ratingRange, sort, page, session?.token, router]);
+  }, [search, selectedGenres, ratingRange, sort, page, router]);
 
   useEffect(() => {
     fetchBooks();

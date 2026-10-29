@@ -3,17 +3,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@src/components/ui/tabs';
 import type { IBook } from '@src/features/books/books.index';
 import type { ILibraryItem } from '../library.index';
+import { libraryApi } from '../api/library.api';
 import { useSession } from '@src/providers';
 import { useEffect, useState } from 'react';
 import { BookCardLibrary } from './BookCardLibrary';
 import { ShelfTab } from './ShelfTab';
-
-interface IShelfApiResponseItem {
-  bookId: string;
-  status?: string;
-  progress?: number;
-  totalPages?: number;
-}
 
 export function LibraryClient() {
   const { data: session } = useSession();
@@ -21,70 +15,27 @@ export function LibraryClient() {
   const [loading, setLoading] = useState(true);
 
   const fetchLibrary = async () => {
-    const userId = session?.user?.id || session?.user?._id;
-    if (!userId) return;
     setLoading(true);
     try {
-      // 1. Fetch User Data (to get shelf)
-      const userRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
-        {
-          headers: session?.token ? { Authorization: `Bearer ${session.token}` } : {},
-        }
-      );
-      if (!userRes.ok) throw new Error('Failed to fetch user');
-      const userData = await userRes.json();
-      const shelf: IShelfApiResponseItem[] = userData.shelf || [];
+      const res = await libraryApi.getMyShelf({ limit: 100 });
+      const items: ILibraryItem[] = (res.items || []).map((item) => ({
+        bookId: item.bookId,
+        book: item.book,
+        status: item.status || 'Want to Read',
+        progress: item.progress || 0,
+        totalPages: item.totalPages || item.book?.totalPages || 0,
+      }));
 
-      if (shelf.length === 0) {
-        setLibraryItems([]);
-        setLoading(false);
-        return;
-      }
-
-      // 2. Fetch Book Details
-      const bookIds = shelf.map(item => item.bookId);
-
-      const booksRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/books?ids=${bookIds.join(
-          ','
-        )}&limit=1000`,
-        {
-          headers: session?.token ? { Authorization: `Bearer ${session.token}` } : {},
-        }
-      );
-      if (!booksRes.ok) throw new Error('Failed to fetch books');
-      const booksData = await booksRes.json();
-      const books: IBook[] = booksData.books || [];
-      const booksMap = new Map<string, IBook>(books.map(b => [b._id, b]));
-
-      // 3. Merge Data
-      const mergedItems: ILibraryItem[] = shelf
-        .map(item => {
-          const book = booksMap.get(item.bookId);
-
-          if (!book) return null;
-
-          return {
-            bookId: item.bookId,
-            book,
-            status: item.status || 'Want to Read',
-            progress: item.progress || 0,
-            totalPages: item.totalPages || book.totalPages || 0,
-          };
-        })
-        .filter((item): item is ILibraryItem => item !== null);
-
-      setLibraryItems(mergedItems);
+      setLibraryItems(items);
     } catch (error) {
-      console.error(error);
+      console.error('Failed to fetch library:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (session?.user?.id || session?.user?._id) {
+    if (session?.user) {
       fetchLibrary();
     }
   }, [session]);

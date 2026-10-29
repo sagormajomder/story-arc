@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@src/components/ui/button';
-import type { ITutorial } from '../tutorials.index';
+import { tutorialsApi, type ITutorial } from '../tutorials.index';
 import { format } from 'date-fns';
 import { Edit2, RefreshCw, Trash2 } from 'lucide-react';
 import { useSession } from '@src/providers';
@@ -42,18 +42,8 @@ export function TutorialList({
 
     setDeleteModal({ open: false, tutorial: null });
 
-    const deletePromise = fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/tutorials/${tutorial._id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-      }
-    ).then(async res => {
-      if (!res.ok) throw new Error('Failed to delete');
+    const deletePromise = tutorialsApi.delete(tutorial._id).then(() => {
       router.refresh();
-      return res;
     });
 
     toast.promise(deletePromise, {

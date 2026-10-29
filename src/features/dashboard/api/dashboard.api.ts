@@ -4,6 +4,7 @@ import { apiClient } from '@src/lib/api-client';
 export interface IDashboardStats {
   totalBooks?: number;
   totalUsers?: number;
+  pendingReviews?: number;
   totalReviews?: number;
   totalTutorials?: number;
   [key: string]: unknown;
@@ -15,9 +16,25 @@ export interface IChartData {
 }
 
 export const dashboardApi = {
-  getStats: (token?: string) =>
-    apiClient.get<IDashboardStats>(API_ENDPOINTS.DASHBOARD.STATS, { token }),
+  getStats: async (): Promise<IDashboardStats> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      message: string;
+      data: IDashboardStats;
+    }>(API_ENDPOINTS.DASHBOARD.STATS);
+    return res.data;
+  },
 
-  getCharts: (token?: string) =>
-    apiClient.get<IChartData[]>(API_ENDPOINTS.DASHBOARD.CHARTS, { token }),
+  getCharts: async (): Promise<{ genreData: IChartData[] }> => {
+    const res = await apiClient.get<{
+      success: boolean;
+      message: string;
+      data: { genreData?: IChartData[] } | IChartData[];
+    }>(API_ENDPOINTS.DASHBOARD.CHARTS);
+
+    if (Array.isArray(res.data)) {
+      return { genreData: res.data };
+    }
+    return { genreData: res.data?.genreData || [] };
+  },
 };

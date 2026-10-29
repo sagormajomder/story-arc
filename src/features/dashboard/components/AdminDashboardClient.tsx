@@ -39,8 +39,8 @@ export function AdminDashboardClient() {
       setLoading(true);
       try {
         const [statsRes, chartsRes] = await Promise.all([
-          dashboardApi.getStats(token || undefined).catch(() => ({})),
-          dashboardApi.getCharts(token || undefined).catch(() => []),
+          dashboardApi.getStats().catch(() => ({})),
+          dashboardApi.getCharts().catch(() => ({ genreData: [] })),
         ]);
 
         if (!isMounted) return;

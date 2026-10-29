@@ -1,8 +1,7 @@
 'use client';
 
 import { BookForm, IBookFormValues } from './BookForm';
-import type { IGenre } from '../books.index';
-import { useSession } from '@src/providers';
+import { booksApi, type IGenre } from '../books.index';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -14,25 +13,13 @@ export interface IAddBookClientWrapperProps {
 export function AddBookFormWrapper({
   genres = [],
 }: IAddBookClientWrapperProps) {
-  const { data: session } = useSession();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (data: IBookFormValues) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.token}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create book');
-      }
+      await booksApi.createBook(data);
 
       toast.success('Book created successfully!');
       router.push('/admin/manage-books');

@@ -2,6 +2,7 @@
 
 import { Button } from '@src/components/ui/button';
 import { Input } from '@src/components/ui/input';
+import { libraryApi } from '@src/features/library/library.index';
 import { Star, X } from 'lucide-react';
 import { useSession } from '@src/providers';
 import { FC, useState } from 'react';
@@ -36,33 +37,16 @@ export const DashboardHeader: FC<IDashboardHeaderProps> = ({ goal, stats }) => {
   const [loading, setLoading] = useState(false);
 
   const handleUpdateGoal = async () => {
-    const userId = session?.user?.id || session?.user?._id;
-    if (!userId || !session?.token) {
+    if (!session?.user) {
       toast.error('Session invalid. Please login again.');
       return;
     }
 
     setLoading(true);
     try {
-      const payload = { target: parseInt(newTarget.toString(), 10) };
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/goal`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        console.error('Update goal failed:', res.status, errData);
-        throw new Error(errData.message || 'Failed to update goal');
-      }
+      await libraryApi.updateGoal({
+        target: parseInt(newTarget.toString(), 10),
+      });
 
       toast.success('Goal updated! Refreshing...');
       setIsEditing(false);

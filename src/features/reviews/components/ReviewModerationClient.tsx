@@ -25,7 +25,7 @@ export function ReviewModerationClient() {
       if (authLoading) return;
       setLoading(true);
       try {
-        const res = await reviewsApi.getAdminReviews(filter, token || undefined);
+        const res = await reviewsApi.getAdminReviews(filter);
         if (!isMounted) return;
         setReviews(res || []);
       } catch (err) {
@@ -40,7 +40,7 @@ export function ReviewModerationClient() {
     return () => {
       isMounted = false;
     };
-  }, [filter, token, authLoading]);
+  }, [filter, authLoading]);
 
   if (loading || authLoading) {
     return (

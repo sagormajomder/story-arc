@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@src/components/ui/avatar';
 import { Badge } from '@src/components/ui/badge';
 import { Button } from '@src/components/ui/button';
 import { Card } from '@src/components/ui/card';
-import type { IReview } from '../reviews.index';
+import { reviewsApi, type IReview } from '../reviews.index';
 import { Check, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,7 @@ export interface IReviewTableProps {
   status: string;
 }
 
-export const ReviewTable: FC<IReviewTableProps> = ({ reviews, token, status }) => {
+export const ReviewTable: FC<IReviewTableProps> = ({ reviews, status }) => {
   const router = useRouter();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
@@ -26,19 +26,9 @@ export const ReviewTable: FC<IReviewTableProps> = ({ reviews, token, status }) =
 
   const handleApprove = async (id: string) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/reviews/${id}/approve`,
-        {
-          method: 'PATCH',
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (res.ok) {
-        toast.success('Review verified successfully');
-        router.refresh();
-      } else {
-        toast.error('Approval failed');
-      }
+      await reviewsApi.approve(id);
+      toast.success('Review verified successfully');
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error('Error verifying review');
@@ -54,20 +44,10 @@ export const ReviewTable: FC<IReviewTableProps> = ({ reviews, token, status }) =
     if (!reviewToDelete) return;
     setIsDeleting(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/reviews/${reviewToDelete}`,
-        {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (res.ok) {
-        toast.success('Review deleted');
-        setDeleteModalOpen(false);
-        router.refresh();
-      } else {
-        toast.error('Delete failed');
-      }
+      await reviewsApi.delete(reviewToDelete);
+      toast.success('Review deleted');
+      setDeleteModalOpen(false);
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error('Delete failed');

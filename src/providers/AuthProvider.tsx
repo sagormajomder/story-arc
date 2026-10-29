@@ -132,6 +132,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
       setUser(res.user);
       setStatus('authenticated');
       setClientAuthCookies(res.user);
+      return res.user;
     } catch (error) {
       setStatus('unauthenticated');
       throw error;
@@ -146,6 +147,7 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         setUser(res.user);
         setStatus('authenticated');
         setClientAuthCookies(res.user);
+        return res.user;
       } catch (error) {
         setStatus('unauthenticated');
         throw error;
