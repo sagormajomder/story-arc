@@ -86,7 +86,11 @@ async function request<T>(
     !_retry &&
     !url.includes(API_ENDPOINTS.AUTH.REFRESH) &&
     !url.includes(API_ENDPOINTS.AUTH.LOGIN) &&
-    !url.includes(API_ENDPOINTS.AUTH.REGISTER)
+    !url.includes(API_ENDPOINTS.AUTH.REGISTER) &&
+    !url.includes(API_ENDPOINTS.AUTH.VERIFY_EMAIL) &&
+    !url.includes(API_ENDPOINTS.AUTH.RESET_PASSWORD) &&
+    !url.includes(API_ENDPOINTS.AUTH.FORGOT_PASSWORD) &&
+    !url.includes(API_ENDPOINTS.AUTH.RESEND_VERIFICATION)
   ) {
     const refreshOk = await refreshAccessToken();
     if (refreshOk) {

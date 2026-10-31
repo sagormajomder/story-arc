@@ -62,11 +62,21 @@ function getCachedUser(): IUser | null {
   return null;
 }
 
+export function hasClientAuthSession(): boolean {
+  if (typeof document === 'undefined') return false;
+  return (
+    document.cookie.includes('isLoggedIn=true') ||
+    Boolean(getCachedUser())
+  );
+}
+
 export function AuthProvider({ children }: IAuthProviderProps) {
   const [user, setUser] = useState<IUser | null>(() => getCachedUser());
   const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<AuthStatus>(() =>
-    getCachedUser() ? 'authenticated' : 'loading'
+    hasClientAuthSession()
+      ? (getCachedUser() ? 'authenticated' : 'loading')
+      : 'unauthenticated'
   );
   const router = useRouter();
 
@@ -75,6 +85,22 @@ export function AuthProvider({ children }: IAuthProviderProps) {
     let isMounted = true;
 
     async function initSession() {
+      // If there are no auth cookies in the browser, user is definitely a guest.
+      // Avoid firing unnecessary /users/me and /auth/refresh calls that result in 401.
+      if (!hasClientAuthSession()) {
+        if (isMounted) {
+          setUser(null);
+          setStatus('unauthenticated');
+        }
+        if (typeof window !== 'undefined') {
+          const currentPath = window.location.pathname;
+          if (currentPath.startsWith('/admin') || currentPath.startsWith('/user')) {
+            router.push(`/login?callbackUrl=${encodeURIComponent(currentPath)}`);
+          }
+        }
+        return;
+      }
+
       try {
         const freshUser = await authApi.getMe();
         if (!isMounted) return;

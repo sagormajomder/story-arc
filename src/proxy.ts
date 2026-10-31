@@ -32,7 +32,12 @@ export default function proxy(req: NextRequest) {
   }
 
   // 3. Guest/Auth Routes: if already logged in, redirect to appropriate area
-  if (pathname === '/login' || pathname === '/register') {
+  if (
+    pathname === '/login' ||
+    pathname === '/register' ||
+    pathname === '/forgot-password' ||
+    pathname === '/reset-password'
+  ) {
     if (isLoggedIn) {
       const targetUrl = isAdmin ? '/admin/dashboard' : '/user/library';
       return NextResponse.redirect(new URL(targetUrl, req.url));
@@ -43,5 +48,12 @@ export default function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/user/:path*', '/login', '/register'],
+  matcher: [
+    '/admin/:path*',
+    '/user/:path*',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+  ],
 };
