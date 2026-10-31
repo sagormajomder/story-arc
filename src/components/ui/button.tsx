@@ -55,16 +55,26 @@ function Button({
   asChild,
   children,
   render,
+  nativeButton,
   ...props
 }: IButtonProps) {
   const effectiveRender =
     asChild && React.isValidElement(children) ? children : render;
+
+  const isNative =
+    nativeButton ??
+    (effectiveRender
+      ? React.isValidElement(effectiveRender)
+        ? effectiveRender.type === 'button'
+        : undefined
+      : true);
 
   return (
     <ButtonPrimitive
       data-slot='button'
       className={cn(buttonVariants({ variant, size, className }))}
       render={effectiveRender}
+      nativeButton={isNative}
       {...props}
     >
       {asChild && React.isValidElement(children) ? undefined : children}
